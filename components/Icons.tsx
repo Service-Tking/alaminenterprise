@@ -1,0 +1,52 @@
+
+import React from 'react';
+import { 
+  LayoutDashboard, 
+  Info, 
+  Wallet, 
+  ShoppingCart, 
+  BarChart3, 
+  Wrench, 
+  Box, 
+  Mail,
+  ChevronRight,
+  Plus,
+  Search,
+  Printer,
+  FileText,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  User,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  Lock,
+  ArrowRightLeft,
+  Download,
+  Upload,
+  RefreshCw,
+  Truck,
+  Layers,
+  Calculator,
+  History,
+  FileSpreadsheet,
+  Eye,
+  Check,
+  Shield,
+  Users,
+  TrendingUp,
+  DollarSign,
+  Map,
+  ChevronDown,
+  Bell
+} from 'lucide-react';
+
+export const Icons = {
+  LayoutDashboard, Info, Wallet, ShoppingCart, BarChart3, Wrench, Box, Mail,
+  ChevronRight, Plus, Search, Printer, FileText, AlertCircle, CheckCircle2, Clock,
+  User, Settings, LogOut, Menu, X, Lock, ArrowRightLeft, Download, Upload,
+  RefreshCw, Truck, Layers, Calculator, History, FileSpreadsheet, Eye, Check,
+  Shield, Users, TrendingUp, DollarSign, Map, ChevronDown, Bell
+};
