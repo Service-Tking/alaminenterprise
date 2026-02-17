@@ -25,14 +25,15 @@ export const searchPartsByFirstWord = (term: string, products: Product[]): Produ
   if (!term) return [];
   const lowerTerm = term.toLowerCase();
   
-  // Logic: Matches starting with the first word, or SKU starting with term
+  // Logic: Matches starting with the first word (1st letter logic), or SKU starting with term
+  // Prioritize direct prefix matches of the whole name or the first word
   return products.filter(p => {
     const nameWords = p.name.toLowerCase().split(' ');
-    return (
-      p.name.toLowerCase().startsWith(lowerTerm) || 
-      (nameWords.length > 0 && nameWords[0].startsWith(lowerTerm)) ||
-      p.sku.toLowerCase().startsWith(lowerTerm)
-    );
+    const isDirectPrefix = p.name.toLowerCase().startsWith(lowerTerm);
+    const isFirstWordPrefix = nameWords.length > 0 && nameWords[0].startsWith(lowerTerm);
+    const isSkuPrefix = p.sku.toLowerCase().startsWith(lowerTerm);
+    
+    return isDirectPrefix || isFirstWordPrefix || isSkuPrefix;
   }).slice(0, 10);
 };
 

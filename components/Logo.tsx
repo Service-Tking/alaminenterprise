@@ -53,10 +53,12 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
 }) => {
   return (
     <div className="flex justify-between items-center border-b-2 border-black pb-6 mb-8 no-print-border">
+      {/* Left side: GANGCHILL GROUP logo */}
       <div className="w-[30%] flex justify-start">
         <GangchillLogo height={75} />
       </div>
       
+      {/* Center: Al-AMIN Enterprise text */}
       <div className="w-[40%] text-center flex flex-col items-center">
         <h1 className="brand-ragtime text-5xl text-blue-900 uppercase leading-none">Al-AMIN</h1>
         <h2 className="brand-articpro text-2xl text-gray-700 italic -mt-1 lowercase">Enterprise</h2>
@@ -67,6 +69,7 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
         <p className="text-[9px] font-black text-gray-400 mt-1">{contact}</p>
       </div>
 
+      {/* Right side: T-KING logo with tagline */}
       <div className="w-[30%] flex justify-end">
         <TKingLogo height={75} />
       </div>
