@@ -71,7 +71,7 @@ const INSPECTION_ITEMS_RIGHT = [
 
 const PrintableSeizeReport: React.FC<PrintableSeizeReportProps> = ({ data, onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-[300] p-4 overflow-y-auto no-print">
+    <div className="fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-[300] p-4 overflow-y-auto no-print backdrop-blur-md">
       <div className="w-full max-w-4xl mb-4 flex justify-between items-center text-white no-print">
         <h3 className="text-xl font-bold flex items-center gap-2">
           <Icons.Printer size={20} /> Inspection Report Preview
@@ -82,42 +82,62 @@ const PrintableSeizeReport: React.FC<PrintableSeizeReportProps> = ({ data, onClo
         </div>
       </div>
 
-      <div className="bg-white w-[210mm] min-h-[297mm] p-[10mm] text-black shadow-2xl print:shadow-none print:m-0 print:w-full font-serif text-[11px] leading-tight flex flex-col border overflow-hidden relative">
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          @page {
+            size: A4;
+            margin: 5mm;
+          }
+          body {
+            -webkit-print-color-adjust: exact;
+          }
+          .printable-a4 {
+            width: 210mm !important;
+            height: 297mm !important;
+            padding: 5mm !important;
+            border: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+          }
+        }
+      `}} />
+
+      <div className="bg-white printable-a4 w-[210mm] min-h-[297mm] p-[10mm] text-black shadow-2xl print:shadow-none print:m-0 print:w-full font-serif text-[11px] leading-tight flex flex-col border overflow-hidden relative">
         
-        <HeaderBranding title="INSPECTION REPORT OF SEIZE VEHICLE" />
+        <HeaderBranding title="INSPECTION REPORT OF SEIZE VEHICLE" className="mb-2" />
 
         {/* Reference Bar */}
-        <div className="flex justify-between items-center mb-2 px-1 text-[12px]">
+        <div className="flex justify-between items-center mb-1 px-1 text-[12px]">
           <div className="flex gap-1"><span className="font-bold">Reference:</span> <span className="border-b border-black min-w-[150px] font-bold">{data.id}</span></div>
           <div className="flex gap-1"><span className="font-bold">Date:</span> <span className="border-b border-black font-bold">{data.date}</span></div>
         </div>
 
         {/* Info Grid */}
-        <div className="border border-black mb-4 bg-white">
+        <div className="border border-black mb-2 bg-white">
           <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Customer ID No:</span> <span className="flex-1 font-bold">{data.customerIdNo}</span></div>
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Registration No.</span> <span className="flex-1 font-bold">{data.registrationNo}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Customer ID No:</span> <span className="flex-1 font-bold">{data.customerIdNo}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Registration No.</span> <span className="flex-1 font-bold">{data.registrationNo}</span></div>
           </div>
           <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Customer Name:</span> <span className="flex-1 font-bold uppercase">{data.customerName}</span></div>
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Chassis No. :</span> <span className="flex-1 font-mono text-[9px] uppercase font-bold">{data.chassisNo}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Customer Name:</span> <span className="flex-1 font-bold uppercase">{data.customerName}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Chassis No. :</span> <span className="flex-1 font-mono text-[9px] uppercase font-bold">{data.chassisNo}</span></div>
           </div>
-          <div className="flex px-3 py-1.5 border-b border-black h-7 items-center">
+          <div className="flex px-3 py-1 border-b border-black h-6 items-center">
             <span className="w-32 font-bold uppercase text-[9px]">Address:</span>
-            <span className="flex-1 font-bold italic text-gray-800 uppercase leading-none">{data.address}</span>
+            <span className="flex-1 font-bold italic text-gray-800 uppercase leading-none truncate">{data.address}</span>
           </div>
           <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Mobile:</span> <span className="flex-1 font-bold">{data.mobile}</span></div>
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Capacity :</span> <span className="flex-1 font-bold uppercase">{data.capacity}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Mobile:</span> <span className="flex-1 font-bold">{data.mobile}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Capacity :</span> <span className="flex-1 font-bold uppercase">{data.capacity}</span></div>
           </div>
           <div className="grid grid-cols-2 divide-x divide-black">
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Officer Name:</span> <span className="flex-1 uppercase font-bold">{data.officerName}</span></div>
-             <div className="flex px-3 py-1.5 h-7 items-center"><span className="w-32 font-bold uppercase text-[9px]">Name of Depo:</span> <span className="flex-1 font-bold">{data.nameOfDepo}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Officer Name:</span> <span className="flex-1 uppercase font-bold">{data.officerName}</span></div>
+             <div className="flex px-3 py-1 h-6 items-center"><span className="w-32 font-bold uppercase text-[9px]">Name of Depo:</span> <span className="flex-1 font-bold">{data.nameOfDepo}</span></div>
           </div>
         </div>
 
         {/* Papers Section */}
-        <div className="border border-black p-2 mb-4 bg-white text-[10px]">
+        <div className="border border-black p-2 mb-2 bg-white text-[10px]">
            <span className="font-bold underline mb-1 block uppercase text-[10px]">Papers:</span>
            <div className="grid grid-cols-4 gap-y-1 gap-x-2 px-2">
               {[
@@ -141,7 +161,7 @@ const PrintableSeizeReport: React.FC<PrintableSeizeReportProps> = ({ data, onClo
         </div>
 
         {/* Inspection Report Grid */}
-        <div className="border border-black mb-4 flex-1 bg-white">
+        <div className="border border-black mb-2 flex-1 bg-white">
            <div className="bg-gray-50 border-b border-black text-center py-0.5 font-bold text-[12px] uppercase">Inspection Report</div>
            <div className="grid grid-cols-2 divide-x divide-black h-full">
               <div className="divide-y divide-black h-full overflow-hidden">
@@ -185,29 +205,29 @@ const PrintableSeizeReport: React.FC<PrintableSeizeReportProps> = ({ data, onClo
            </div>
         </div>
 
-        <div className="border border-black mb-6 flex flex-col h-16">
+        <div className="border border-black mb-4 flex flex-col h-16">
            <div className="bg-gray-50 border-b border-black px-2 py-0.5 font-bold uppercase text-[9px]">Remarks:</div>
            <p className="flex-1 p-2 text-[10px] italic leading-tight uppercase font-medium">{data.remarks}</p>
         </div>
 
         {/* Footer */}
-        <div className="grid grid-cols-3 gap-8 px-2 mb-10 text-[11px] font-bold text-center uppercase">
+        <div className="grid grid-cols-3 gap-8 px-2 mb-8 text-[11px] font-bold text-center uppercase">
            <div className="flex flex-col items-center">
-              <span className="mb-14">Assigner</span>
+              <span className="mb-12">Assigner</span>
               <div className="text-left space-y-1 w-full text-[9px]">
                  <p>Name: <span className="border-b border-black inline-block min-w-[120px] font-bold">{data.assigner.name}</span></p>
                  <p>Mobile: <span className="border-b border-black inline-block min-w-[120px] font-bold">{data.assigner.mobile}</span></p>
               </div>
            </div>
            <div className="flex flex-col items-center">
-              <span className="mb-14">Officers</span>
+              <span className="mb-12">Officers</span>
               <div className="text-left space-y-1 w-full text-[9px]">
-                 <p>Name: <span className="border-b border-black inline-block min-w-[120px] font-bold">{data.officers.name}</span></p>
+                 <p>Name: <span className="border-b border-black inline-block min-w-[120px] font-bold">{data.officerName}</span></p>
                  <p>Mobile: <span className="border-b border-black inline-block min-w-[120px] font-bold">{data.officers.mobile}</span></p>
               </div>
            </div>
            <div className="flex flex-col items-center">
-              <span className="mb-14 uppercase">Name Of Depo</span>
+              <span className="mb-12 uppercase">Name Of Depo</span>
               <div className="text-left space-y-1 w-full text-[10px]">
                  <p>Name : <span className="font-bold underline">{data.depoSignatory.name}</span></p>
                  <p>Mobile: <span className="font-bold underline">{data.depoSignatory.mobile}</span></p>

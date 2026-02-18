@@ -26,34 +26,39 @@ interface HeaderBrandingProps {
   title: string;
   address?: string;
   contact?: string;
+  className?: string;
 }
 
 export const HeaderBranding: React.FC<HeaderBrandingProps> = ({ 
   title, 
   address = "Plot# 50, Road# Dhaka Mymensingh High Way, Gazipura Tongi.", 
-  contact = "Cell: 01678819779, 01978819819, E-mail: Service@alamin-bd.com" 
+  contact = "Cell: 01678819779, 01978819819, E-mail: Service@alamin-bd.com",
+  className = ""
 }) => {
   return (
-    <div className="flex justify-between items-center border-b-2 border-black pb-4 mb-6 no-print-border bg-white">
-      {/* Column 1: Left */}
+    <div className={`flex justify-between items-center border-b-2 border-black pb-4 mb-4 no-print-border bg-white ${className}`}>
+      {/* 1. Left: GANGCHILL GROUP Logo */}
       <div className="w-[30%] flex justify-start items-center">
-        <GangchillLogo height={55} />
+        <GangchillLogo height={50} />
       </div>
       
-      {/* Column 2: Center (Branding) */}
+      {/* 2. Center: Al-AMIN Enterprise Text */}
       <div className="w-[40%] text-center flex flex-col items-center">
-        <h1 className="brand-ragtime text-5xl text-blue-900 uppercase leading-none select-none">Al-AMIN</h1>
-        <h2 className="brand-articpro text-2xl text-gray-700 italic -mt-1 select-none">Enterprise</h2>
-        <div className="mt-2 px-6 py-1 border-2 border-black font-black uppercase tracking-[0.2em] text-[10px] bg-gray-50 shadow-sm print:bg-white">
+        <div className="flex items-baseline gap-1">
+          <span className="text-[10px] font-bold text-gray-900">M/S</span>
+          <h1 className="brand-ragtime text-4xl text-blue-900 uppercase leading-none select-none">Al-AMIN</h1>
+        </div>
+        <h2 className="brand-articpro text-xl text-gray-700 italic -mt-1 select-none">Enterprise</h2>
+        <div className="mt-2 px-4 py-0.5 border-2 border-black font-black uppercase tracking-[0.2em] text-[9px] bg-gray-50 shadow-sm print:bg-white">
           {title}
         </div>
-        <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tight mt-3 max-w-xs">{address}</p>
-        <p className="text-[8px] font-black text-gray-400 mt-0.5">{contact}</p>
+        <p className="text-[7px] font-bold text-gray-500 uppercase tracking-tight mt-2 max-w-xs">{address}</p>
+        <p className="text-[7px] font-black text-gray-400 mt-0.5">{contact}</p>
       </div>
 
-      {/* Column 3: Right */}
+      {/* 3. Right: T-KING Logo + Tagline */}
       <div className="w-[30%] flex justify-end items-center">
-        <TKingLogo height={65} />
+        <TKingLogo height={60} />
       </div>
     </div>
   );

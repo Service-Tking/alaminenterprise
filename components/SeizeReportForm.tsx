@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { Icons } from './Icons';
 import { SeizeList } from '../types';
+import { HeaderBranding } from './Logo';
 
 interface SeizeReportFormProps {
   onSave: (data: SeizeList) => void;
@@ -116,10 +118,10 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
     }
   };
 
-  const handlePaperToggle = (key: keyof typeof formData.papers) => {
+  const handlePaperToggle = (paperKey: keyof typeof formData.papers) => {
     setFormData(prev => ({
       ...prev,
-      papers: { ...prev.papers, [key]: !prev.papers[key] },
+      papers: { ...prev.papers, [paperKey]: !prev.papers[paperKey] },
     }));
   };
 
@@ -135,177 +137,169 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
   };
 
   return (
-    <div className="bg-white p-8 max-w-5xl w-full h-[98vh] overflow-y-auto flex flex-col shadow-2xl animate-in zoom-in-95 duration-300 no-print font-serif text-black border-[1px] border-gray-300">
-      
-      {/* Header Branding */}
-      <div className="text-center mb-6">
-        <h1 className="text-[28px] font-bold uppercase tracking-tight leading-none mb-1">
-          INSPECTION REPORT OF SEIZE VEHICLE
-        </h1>
-        <div className="flex flex-col items-center">
-          <div className="flex items-baseline gap-1">
-             <span className="text-[12px] font-bold">M/S</span>
-             <span className="brand-ragtime text-[32px] text-blue-900 leading-none uppercase tracking-tighter">Al-AMIN</span>
-             <span className="brand-articpro text-[20px] text-gray-700 italic leading-none ml-1">Enterprise</span>
-             <span className="text-[14px] font-bold ml-1">(T-KING)</span>
+    <div className="fixed inset-0 bg-black/80 z-[200] overflow-x-auto overflow-y-auto flex items-start justify-center p-4 backdrop-blur-sm no-print">
+      <div className="bg-white p-8 shadow-2xl rounded-sm border border-gray-300 font-serif text-black origin-top scale-[0.85] lg:scale-[0.95] xl:scale-100" style={{ minWidth: '950px' }}>
+        
+        {/* Responsive Fixed-Width Form Content */}
+        <div className="w-full">
+          <HeaderBranding title="INSPECTION REPORT OF SEIZE VEHICLE" />
+
+          <div className="flex justify-end mb-4 gap-4 no-print">
+            <button onClick={onCancel} className="p-2 bg-gray-100 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg transition-all">
+              <Icons.X size={20} />
+            </button>
           </div>
-        </div>
-      </div>
 
-      <div className="flex justify-end mb-4 gap-4 no-print">
-        <button onClick={onCancel} className="p-2 bg-gray-100 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg transition-all">
-          <Icons.X size={20} />
-        </button>
-      </div>
-
-      {/* Reference Row */}
-      <div className="flex justify-between items-center mb-2 px-1 text-[14px]">
-        <div className="flex items-center gap-2">
-          <span className="font-bold">Reference:</span>
-          <input className="border-b border-black outline-none px-2 w-48 font-bold" value={formData.id} onChange={e => setFormData({...formData, id: e.target.value})} />
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="font-bold">Date:</span>
-          <input type="date" className="border-b border-black outline-none px-2 font-bold" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} />
-        </div>
-      </div>
-
-      {/* Main Form Grid */}
-      <div className="border border-black bg-white overflow-hidden text-[13px] mb-4">
-        {/* Row 1 */}
-        <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-          <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Customer ID No:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.customerIdNo} placeholder="Input Hare/ auto filling" onChange={e => handleAutoFill('customerIdNo', e.target.value)} /></div>
-          <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Registration No.</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.registrationNo} placeholder="Input Hare/Auto filling" onChange={e => handleAutoFill('registrationNo', e.target.value)} /></div>
-        </div>
-        {/* Row 2 */}
-        <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-          <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Customer Name:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.customerName} placeholder="Auto filling" readOnly /></div>
-          <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Chassis No. :</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.chassisNo} placeholder="Auto filling" readOnly /></div>
-        </div>
-        {/* Row 3 - Merged Address */}
-        <div className="flex items-center px-3 py-1.5 border-b border-black">
-          <span className="w-40 font-bold">Address:</span>
-          <input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.address} placeholder="Auto filling" readOnly />
-        </div>
-        {/* Row 4 */}
-        <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-          <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Mobile:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.mobile} placeholder="Auto filling" readOnly /></div>
-          <div className="flex items-center px-3 py-1.5">
-            <span className="w-40 font-bold">Capacity :</span>
-            <select className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.capacity} onChange={e => setFormData({ ...formData, capacity: e.target.value })}>
-              <option>0.75/1.0/1.5/2.5 Ton</option>
-              <option>0.75 Ton</option>
-              <option>1.0 Ton</option>
-              <option>1.5 Ton</option>
-              <option>2.5 Ton</option>
-            </select>
-          </div>
-        </div>
-        {/* Row 5 */}
-        <div className="grid grid-cols-2 divide-x divide-black">
-          <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Officer Name:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.officerName} placeholder="Auto filling" readOnly /></div>
-          <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Name of Depo:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.nameOfDepo} readOnly /></div>
-        </div>
-      </div>
-
-      {/* Papers Section */}
-      <div className="border border-black p-3 mb-4 bg-white text-[12px]">
-        <h4 className="font-bold underline mb-2 uppercase">Papers:</h4>
-        <div className="grid grid-cols-4 gap-y-2 px-4">
-          {Object.keys(formData.papers).map((paperKey) => (
-            <div key={paperKey} className="flex items-center gap-2 cursor-pointer" onClick={() => handlePaperToggle(paperKey as keyof typeof formData.papers)}>
-              <div className="w-4 h-4 border border-black flex items-center justify-center font-bold">
-                {formData.papers[paperKey as keyof typeof formData.papers] ? 'X' : ''}
-              </div>
-              <label className="capitalize font-bold cursor-pointer whitespace-nowrap">
-                {paperKey.replace(/([A-Z])/g, ' $1').trim()}
-              </label>
+          {/* Reference Row */}
+          <div className="flex justify-between items-center mb-2 px-1 text-[14px]">
+            <div className="flex items-center gap-2">
+              <span className="font-bold">Reference:</span>
+              <input className="border-b border-black outline-none px-2 w-48 font-bold" value={formData.id} onChange={e => setFormData({...formData, id: e.target.value})} />
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Inspection Report Section */}
-      <div className="border border-black overflow-hidden mb-4 bg-white">
-        <h3 className="bg-gray-100 p-1 text-center font-bold uppercase border-b border-black text-[14px]">Inspection Report</h3>
-        <div className="grid grid-cols-2 divide-x divide-black">
-          {/* Left Column */}
-          <div className="divide-y divide-black">
-            {INSPECTION_ITEMS_LEFT.map((item) => (
-              <div key={item.label} className="grid grid-cols-2 h-7 items-center px-2 hover:bg-gray-50 transition-colors">
-                <span className="font-medium text-[11px] truncate">{item.label}</span>
-                <div className="flex justify-between px-1">
-                  {item.options.map((opt) => (
-                    <div key={opt} className="flex items-center gap-1 cursor-pointer" onClick={() => handleInspectionSelect(item.label, opt)}>
-                      <div className="w-3.5 h-3.5 border border-gray-400 flex items-center justify-center text-[9px] font-bold">
-                        {formData.inspectionReport[item.label] === opt ? 'X' : ''}
-                      </div>
-                      <span className="text-[10px] whitespace-nowrap">{opt}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div className="flex items-center gap-2">
+              <span className="font-bold">Date:</span>
+              <input type="date" className="border-b border-black outline-none px-2 font-bold" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} />
+            </div>
           </div>
-          {/* Right Column */}
-          <div className="divide-y divide-black">
-            {INSPECTION_ITEMS_RIGHT.map((item) => (
-              <div key={item.label} className="grid grid-cols-2 h-7 items-center px-2 hover:bg-gray-50 transition-colors">
-                <span className="font-medium text-[11px] truncate">{item.label}</span>
-                <div className="flex justify-between px-1">
-                  {item.options.length > 0 ? (
-                    item.options.map((opt) => (
-                      <div key={opt} className="flex items-center gap-1 cursor-pointer" onClick={() => handleInspectionSelect(item.label, opt)}>
-                        <div className="w-3.5 h-3.5 border border-gray-400 flex items-center justify-center text-[9px] font-bold">
-                          {(item.label === 'Condition' ? formData.condition === opt : formData.inspectionReport[item.label] === opt) ? 'X' : ''}
+
+          {/* Main Form Grid */}
+          <div className="border border-black bg-white overflow-hidden text-[13px] mb-4">
+            {/* Row 1 */}
+            <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
+              <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Customer ID No:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.customerIdNo} placeholder="Input Code..." onChange={e => handleAutoFill('customerIdNo', e.target.value)} /></div>
+              <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Registration No.</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.registrationNo} placeholder="Input Reg No..." onChange={e => handleAutoFill('registrationNo', e.target.value)} /></div>
+            </div>
+            {/* Row 2 */}
+            <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
+              <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Customer Name:</span><input className="flex-1 bg-transparent border-none outline-none font-bold uppercase" value={formData.customerName} placeholder="Auto-filled" readOnly /></div>
+              <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Chassis No. :</span><input className="flex-1 bg-transparent border-none outline-none font-bold font-mono" value={formData.chassisNo} placeholder="Auto-filled" readOnly /></div>
+            </div>
+            {/* Row 3 - Merged Address */}
+            <div className="flex items-center px-3 py-1.5 border-b border-black">
+              <span className="w-40 font-bold">Address:</span>
+              <input className="flex-1 bg-transparent border-none outline-none font-bold italic" value={formData.address} placeholder="Auto-filled" readOnly />
+            </div>
+            {/* Row 4 */}
+            <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
+              <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Mobile:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.mobile} placeholder="Auto-filled" readOnly /></div>
+              <div className="flex items-center px-3 py-1.5">
+                <span className="w-40 font-bold">Capacity :</span>
+                <select className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.capacity} onChange={e => setFormData({ ...formData, capacity: e.target.value })}>
+                  <option>0.75/1.0/1.5/2.5 Ton</option>
+                  <option>0.75 Ton</option>
+                  <option>1.0 Ton</option>
+                  <option>1.5 Ton</option>
+                  <option>2.5 Ton</option>
+                </select>
+              </div>
+            </div>
+            {/* Row 5 */}
+            <div className="grid grid-cols-2 divide-x divide-black">
+              <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Officer Name:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.officerName} placeholder="Auto-filled" readOnly /></div>
+              <div className="flex items-center px-3 py-1.5"><span className="w-40 font-bold">Name of Depo:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.nameOfDepo} readOnly /></div>
+            </div>
+          </div>
+
+          {/* Papers Section */}
+          <div className="border border-black p-3 mb-4 bg-white text-[12px]">
+            <h4 className="font-bold underline mb-2 uppercase">Papers:</h4>
+            <div className="grid grid-cols-4 gap-y-2 px-4">
+              {Object.keys(formData.papers).map((paperKey) => (
+                <div key={paperKey} className="flex items-center gap-2 cursor-pointer" onClick={() => handlePaperToggle(paperKey as keyof typeof formData.papers)}>
+                  <div className="w-4 h-4 border border-black flex items-center justify-center font-bold">
+                    {formData.papers[paperKey as keyof typeof formData.papers] ? 'X' : ''}
+                  </div>
+                  <label className="capitalize font-bold cursor-pointer whitespace-nowrap">
+                    {paperKey.replace(/([A-Z])/g, ' $1').trim()}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Inspection Report Section */}
+          <div className="border border-black overflow-hidden mb-4 bg-white">
+            <h3 className="bg-gray-100 p-1 text-center font-bold uppercase border-b border-black text-[14px]">Inspection Report</h3>
+            <div className="grid grid-cols-2 divide-x divide-black">
+              {/* Left Column */}
+              <div className="divide-y divide-black">
+                {INSPECTION_ITEMS_LEFT.map((item) => (
+                  <div key={item.label} className="grid grid-cols-2 h-7 items-center px-2 hover:bg-gray-50 transition-colors">
+                    <span className="font-medium text-[11px] truncate">{item.label}</span>
+                    <div className="flex justify-between px-1">
+                      {item.options.map((opt) => (
+                        <div key={opt} className="flex items-center gap-1 cursor-pointer" onClick={() => handleInspectionSelect(item.label, opt)}>
+                          <div className="w-3.5 h-3.5 border border-gray-400 flex items-center justify-center text-[9px] font-bold">
+                            {formData.inspectionReport[item.label] === opt ? 'X' : ''}
+                          </div>
+                          <span className="text-[10px] whitespace-nowrap">{opt}</span>
                         </div>
-                        <span className="text-[10px] whitespace-nowrap">{opt}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <input className="flex-1 border-b border-gray-300 outline-none text-[11px] bg-transparent ml-2 h-5" />
-                  )}
-                </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+              {/* Right Column */}
+              <div className="divide-y divide-black">
+                {INSPECTION_ITEMS_RIGHT.map((item) => (
+                  <div key={item.label} className="grid grid-cols-2 h-7 items-center px-2 hover:bg-gray-50 transition-colors">
+                    <span className="font-medium text-[11px] truncate">{item.label}</span>
+                    <div className="flex justify-between px-1">
+                      {item.options.length > 0 ? (
+                        item.options.map((opt) => (
+                          <div key={opt} className="flex items-center gap-1 cursor-pointer" onClick={() => handleInspectionSelect(item.label, opt)}>
+                            <div className="w-3.5 h-3.5 border border-gray-400 flex items-center justify-center text-[9px] font-bold">
+                              {(item.label === 'Condition' ? formData.condition === opt : formData.inspectionReport[item.label] === opt) ? 'X' : ''}
+                            </div>
+                            <span className="text-[10px] whitespace-nowrap">{opt}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <input className="flex-1 border-b border-gray-300 outline-none text-[11px] bg-transparent ml-2 h-5" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Remarks Section */}
-      <div className="border border-black flex flex-col mb-6 h-20">
-        <div className="bg-gray-50 border-b border-black px-2 py-1 font-bold uppercase text-[12px]">Remarks:</div>
-        <textarea className="w-full p-2 outline-none italic text-gray-700 bg-white resize-none" value={formData.remarks} onChange={e => setFormData({ ...formData, remarks: e.target.value })} />
-      </div>
+          {/* Remarks Section */}
+          <div className="border border-black flex flex-col mb-6 h-20">
+            <div className="bg-gray-50 border-b border-black px-2 py-1 font-bold uppercase text-[12px]">Remarks:</div>
+            <textarea className="w-full p-2 outline-none italic text-gray-700 bg-white resize-none" value={formData.remarks} onChange={e => setFormData({ ...formData, remarks: e.target.value })} />
+          </div>
 
-      {/* Footer / Signatories Section */}
-      <div className="grid grid-cols-3 gap-10 mt-auto text-[13px] font-bold">
-        <div className="space-y-12">
-          <p className="text-center">Assigner</p>
-          <div className="space-y-2 px-2">
-            <div className="flex items-center gap-2"><span>Name:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.assigner.name} onChange={e => setFormData({ ...formData, assigner: { ...formData.assigner, name: e.target.value } })} /></div>
-            <div className="flex items-center gap-2"><span>Mobile:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.assigner.mobile} onChange={e => setFormData({ ...formData, assigner: { ...formData.assigner, mobile: e.target.value } })} /></div>
+          {/* Footer / Signatories Section */}
+          <div className="grid grid-cols-3 gap-10 mt-auto text-[13px] font-bold">
+            <div className="space-y-12">
+              <p className="text-center">Assigner</p>
+              <div className="space-y-2 px-2">
+                <div className="flex items-center gap-2"><span>Name:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.assigner.name} onChange={e => setFormData({ ...formData, assigner: { ...formData.assigner, name: e.target.value } })} /></div>
+                <div className="flex items-center gap-2"><span>Mobile:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.assigner.mobile} onChange={e => setFormData({ ...formData, assigner: { ...formData.assigner, mobile: e.target.value } })} /></div>
+              </div>
+            </div>
+            <div className="space-y-12">
+              <p className="text-center">Officers</p>
+              <div className="space-y-2 px-2">
+                <div className="flex items-center gap-2"><span>Name:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.officers.name} onChange={e => setFormData({ ...formData, officers: { ...formData.officers, name: e.target.value } })} /></div>
+                <div className="flex items-center gap-2"><span>Mobile:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.officers.mobile} onChange={e => setFormData({ ...formData, officers: { ...formData.officers, mobile: e.target.value } })} /></div>
+              </div>
+            </div>
+            <div className="space-y-12">
+              <p className="text-center">Name Of Depo</p>
+              <div className="space-y-2 px-2">
+                <div className="flex items-center gap-2"><span>Name:</span> <span className="flex-1 text-left">{formData.depoSignatory.name}</span></div>
+                <div className="flex items-center gap-2"><span>Mobile:</span> <span className="flex-1 text-left">{formData.depoSignatory.mobile}</span></div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="space-y-12">
-          <p className="text-center">Officers</p>
-          <div className="space-y-2 px-2">
-            <div className="flex items-center gap-2"><span>Name:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.officers.name} onChange={e => setFormData({ ...formData, officers: { ...formData.officers, name: e.target.value } })} /></div>
-            <div className="flex items-center gap-2"><span>Mobile:</span><input className="flex-1 border-b border-black outline-none bg-transparent" value={formData.officers.mobile} onChange={e => setFormData({ ...formData, officers: { ...formData.officers, mobile: e.target.value } })} /></div>
-          </div>
-        </div>
-        <div className="space-y-12">
-          <p className="text-center">Name Of Depo</p>
-          <div className="space-y-2 px-2">
-            <div className="flex items-center gap-2"><span>Name:</span> <span className="flex-1 text-left">{formData.depoSignatory.name}</span></div>
-            <div className="flex items-center gap-2"><span>Mobile:</span> <span className="flex-1 text-left">{formData.depoSignatory.mobile}</span></div>
-          </div>
-        </div>
-      </div>
 
-      <div className="flex justify-end gap-3 mt-10 pb-4 no-print border-t pt-6 border-gray-100">
-        <button onClick={onCancel} className="px-6 py-2 text-gray-500 font-bold uppercase text-[12px] hover:text-red-500 transition-colors">Discard</button>
-        <button onClick={() => onSave(formData)} className="bg-blue-900 text-white px-10 py-3 rounded-lg font-bold uppercase text-[12px] tracking-widest shadow-xl active:scale-95 transition-all">Save & Generate Report</button>
+          <div className="flex justify-end gap-3 mt-10 pb-4 no-print border-t pt-6 border-gray-100">
+            <button onClick={onCancel} className="px-6 py-2 text-gray-500 font-bold uppercase text-[12px] hover:text-red-500 transition-colors">Discard</button>
+            <button onClick={() => onSave(formData)} className="bg-blue-900 text-white px-10 py-3 rounded-lg font-bold uppercase text-[12px] tracking-widest shadow-xl active:scale-95 transition-all">Save & Generate Report</button>
+          </div>
+        </div>
       </div>
     </div>
   );
