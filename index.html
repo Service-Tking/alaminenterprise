@@ -15,7 +15,7 @@
       background-color: #ecf0f5;
     }
     
-    /* Branding Font Simulations - Isolated classes */
+    /* Branding Font Simulations */
     .brand-ragtime {
       font-family: 'Inter', sans-serif;
       font-weight: 900;
@@ -38,6 +38,7 @@
       .no-print { display: none !important; }
       body { background: white !important; padding: 0 !important; margin: 0 !important; }
       @page { size: auto; margin: 10mm; }
+      .no-print-border { border-bottom: 2px solid black !important; }
     }
   </style>
 <script type="importmap">
@@ -54,5 +55,6 @@
 </head>
 <body class="text-gray-900 overflow-x-hidden">
   <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
 </body>
 </html>

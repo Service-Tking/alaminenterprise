@@ -70,7 +70,6 @@ const LoginView: React.FC<{ onLogin: (userId: string, pass: string) => void }> =
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-bl-full -z-0"></div>
         <div className="text-center space-y-4 relative z-10">
           <div className="flex justify-center">
-            {/* Changed 'size' to 'height' to fix TypeScript error */}
             <GangchillLogo height={80} />
           </div>
           <div className="flex flex-col items-center">
@@ -243,7 +242,6 @@ const App: React.FC = () => {
         />;
       case 'sales':
         if (activeSubTab === 'sales-estimate') return <EstimateManagement estimates={estimates} onUpdateEstimates={setEstimates} products={products} />;
-        // Fix: Removed unused props 'templates', 'onUpdateProducts', and 'estimates' to match SalesManagementProps interface.
         return <SalesManagement 
           activeSubTab={activeSubTab} 
           jobCards={jobCards} 
@@ -270,6 +268,7 @@ const App: React.FC = () => {
           activeSubTab={activeSubTab}
           jobCards={jobCards}
           onUpdateJobCards={setJobCards}
+          products={products}
         />;
       default:
         return <DashboardOverview role={user.role} />;
@@ -286,7 +285,6 @@ const App: React.FC = () => {
       <header className="h-14 bg-[#222d32] flex items-center justify-between px-6 shrink-0 z-20">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {/* Changed 'size' to 'height' to fix TypeScript error */}
             <GangchillLogo height={32} />
             <h1 className="text-xl font-bold text-white uppercase tracking-tighter">Gangchill <span className="font-light">Group</span></h1>
           </div>
@@ -311,6 +309,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
+      {/* Primary Teal Navigation Bar */}
       <nav className="h-[76px] bg-[#17a2b8] flex items-center px-4 shrink-0 z-10 shadow-lg justify-center">
         <div className="flex items-center h-full">
           <button 

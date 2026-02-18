@@ -18,7 +18,6 @@ export const TKingLogo: React.FC<{ height?: number; className?: string }> = ({ h
     <path d="M10 30 C60 20 120 20 150 80 C180 20 240 20 290 30 L270 60 C230 50 170 50 150 90 C130 50 70 50 30 60 Z" fill="#0EA5E9" />
     <path d="M135 15 L165 15 L165 25 L155 25 L155 75 L145 75 L145 25 L135 25 Z" fill="#0369A1" />
     <text x="150" y="120" textAnchor="middle" fill="#1E40AF" style={{ font: '900 38px Inter, sans-serif', letterSpacing: '3px' }}>T•KING</text>
-    {/* Bengali Tagline: টাকা আয়ের রাজা */}
     <text x="150" y="155" textAnchor="middle" fill="#DC2626" style={{ font: 'bold 20px Inter, sans-serif' }}>টাকা আয়ের রাজা</text>
   </svg>
 );
@@ -36,27 +35,25 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
 }) => {
   return (
     <div className="flex justify-between items-center border-b-2 border-black pb-4 mb-6 no-print-border bg-white">
-      {/* 1. Left Column: Gangchill Group Logo */}
+      {/* Left side: GANGCHILL GROUP logo */}
       <div className="w-[30%] flex justify-start items-center">
-        <GangchillLogo height={65} />
+        <GangchillLogo height={60} />
       </div>
       
-      {/* 2. Center Column: Al-AMIN Enterprise Branding */}
+      {/* Center: Al-AMIN Enterprise text */}
       <div className="w-[40%] text-center flex flex-col items-center">
         <h1 className="brand-ragtime text-5xl text-blue-900 uppercase leading-none select-none">Al-AMIN</h1>
-        <h2 className="brand-articpro text-2xl text-gray-700 italic -mt-1 select-none">Enterprise</h2>
-        
+        <h2 className="brand-articpro text-2xl text-gray-700 italic -mt-1">Enterprise</h2>
         <div className="mt-2 px-6 py-1 border-2 border-black font-black uppercase tracking-[0.2em] text-[10px] bg-gray-50 shadow-sm print:bg-white">
           {title}
         </div>
-        
         <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tight mt-3 max-w-xs">{address}</p>
         <p className="text-[8px] font-black text-gray-400 mt-0.5">{contact}</p>
       </div>
 
-      {/* 3. Right Column: T-KING Logo + Tagline */}
+      {/* Right side: T-KING logo with tagline */}
       <div className="w-[30%] flex justify-end items-center">
-        <TKingLogo height={75} />
+        <TKingLogo height={70} />
       </div>
     </div>
   );
