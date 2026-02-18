@@ -21,20 +21,29 @@ export const getErpInsights = async (module: string, data: any) => {
   }
 };
 
+/**
+ * Requirement: 1st character/word dropdown search.
+ * Filters products from the local registry based on prefix matching.
+ */
 export const searchPartsByFirstWord = (term: string, products: Product[]): Product[] => {
-  if (!term) return [];
+  if (!term || term.trim() === '') return [];
   const lowerTerm = term.toLowerCase();
   
-  // Logic: Matches starting with the first word (1st letter logic), or SKU starting with term
-  // Prioritize direct prefix matches of the whole name or the first word
   return products.filter(p => {
-    const nameWords = p.name.toLowerCase().split(' ');
-    const isDirectPrefix = p.name.toLowerCase().startsWith(lowerTerm);
-    const isFirstWordPrefix = nameWords.length > 0 && nameWords[0].startsWith(lowerTerm);
-    const isSkuPrefix = p.sku.toLowerCase().startsWith(lowerTerm);
+    const nameLower = p.name.toLowerCase();
+    const skuLower = p.sku.toLowerCase();
     
-    return isDirectPrefix || isFirstWordPrefix || isSkuPrefix;
-  }).slice(0, 10);
+    // Priority 1: Name starts with the term (1st character typed logic)
+    const matchesNamePrefix = nameLower.startsWith(lowerTerm);
+    
+    // Priority 2: SKU starts with the term
+    const matchesSkuPrefix = skuLower.startsWith(lowerTerm);
+    
+    // Priority 3: Any word in the name starts with the term
+    const matchesWordPrefix = nameLower.split(' ').some(word => word.startsWith(lowerTerm));
+    
+    return matchesNamePrefix || matchesSkuPrefix || matchesWordPrefix;
+  }).slice(0, 15);
 };
 
 export const generateJobCardDescription = async (complaints: string) => {
