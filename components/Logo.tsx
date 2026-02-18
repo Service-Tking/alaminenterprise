@@ -23,8 +23,8 @@ export const TKingLogo: React.FC<{ height?: number; className?: string }> = ({ h
 );
 
 export const Watermark: React.FC = () => (
-  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] z-[-1]">
-    <TKingLogo height={500} />
+  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.08] z-0 overflow-hidden">
+    <TKingLogo height={500} className="transform scale-150 rotate-[-15deg]" />
   </div>
 );
 
@@ -42,48 +42,49 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
   className = ""
 }) => {
   return (
-    <div className={`flex flex-col border-b border-black pb-2 mb-2 bg-white ${className}`}>
-      <div className="flex items-center gap-4">
-        <GangchillLogo height={40} />
-        <div className="flex items-baseline gap-2">
-          <h1 className="brand-ragtime text-[28px] text-blue-900 uppercase">Al-AMIN</h1>
-          <h1 className="brand-articpro text-[28px] text-gray-700 italic">Enterprise</h1>
+    <div className={`flex flex-col border-b-2 border-black pb-2 mb-2 bg-white ${className}`}>
+      <div className="flex items-start gap-4">
+        <div className="flex flex-col items-start">
+          <GangchillLogo height={35} />
+          <div className="flex items-baseline gap-1.5 mt-1">
+            <h1 className="brand-ragtime text-[24px] text-blue-900 uppercase leading-none">Al-AMIN</h1>
+            <h1 className="brand-articpro text-[24px] text-gray-700 italic leading-none">Enterprise</h1>
+          </div>
         </div>
-        <div className="ml-auto border-2 border-black px-4 py-0.5 font-black uppercase text-[11px] tracking-widest bg-gray-50">
-          {title}
+        <div className="ml-auto flex flex-col items-end">
+          <div className="border-2 border-black px-4 py-1 font-black uppercase text-[12px] tracking-widest bg-gray-50 shadow-sm">
+            {title}
+          </div>
+          <div className="mt-2 text-right">
+            <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tighter leading-none">{address}</p>
+            <p className="text-[8px] font-black text-gray-400 leading-none mt-1">{contact}</p>
+          </div>
         </div>
-      </div>
-      <div className="mt-1">
-        <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tighter leading-none">{address}</p>
-        <p className="text-[8px] font-black text-gray-400 leading-none mt-0.5">{contact}</p>
       </div>
     </div>
   );
 };
 
 export const SeizeHeaderBranding: React.FC<{ title: string; address: string; contact: string }> = ({ title, address, contact }) => (
-  <div className="flex flex-col border-b border-black pb-2 mb-2 bg-white">
-    <div className="flex items-center gap-4">
-      {/* Top Left Gangchill Logo */}
-      <GangchillLogo height={45} />
-      
-      {/* Parallel Al-AMIN Enterprise Branding */}
-      <div className="flex items-baseline gap-2">
-        <h1 className="brand-ragtime text-[32px] text-blue-900 uppercase">Al-AMIN</h1>
-        <h1 className="brand-articpro text-[32px] text-gray-700 italic">Enterprise</h1>
-      </div>
-
-      {/* Right Aligned Document Title */}
-      <div className="ml-auto flex flex-col items-end">
-        <div className="px-6 py-1 border-2 border-black font-black uppercase tracking-[0.1em] text-[14px] bg-gray-50 shadow-sm print:bg-white leading-none">
-          {title}
+  <div className="flex flex-col border-b-2 border-black pb-2 mb-2 bg-white">
+    <div className="flex items-start gap-4">
+      <div className="flex flex-col items-start">
+        <GangchillLogo height={40} />
+        <div className="flex items-baseline gap-2 mt-1">
+          <h1 className="brand-ragtime text-[28px] text-blue-900 uppercase leading-none">Al-AMIN</h1>
+          <h1 className="brand-articpro text-[28px] text-gray-700 italic leading-none">Enterprise</h1>
         </div>
       </div>
-    </div>
-    
-    <div className="mt-2 pl-[60px]">
-      <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tighter leading-none">{address}</p>
-      <p className="text-[8px] font-black text-gray-400 leading-none mt-0.5">{contact}</p>
+
+      <div className="ml-auto flex flex-col items-end">
+        <div className="px-6 py-2 border-2 border-black font-black uppercase tracking-[0.1em] text-[14px] bg-gray-50 shadow-sm leading-none">
+          {title}
+        </div>
+        <div className="mt-2 text-right">
+          <p className="text-[9px] font-bold text-gray-500 uppercase tracking-tighter leading-none">{address}</p>
+          <p className="text-[9px] font-black text-gray-400 leading-none mt-1">{contact}</p>
+        </div>
+      </div>
     </div>
   </div>
 );

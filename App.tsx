@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, Component, ErrorInfo, ReactNode } from 'react';
 import { Icons } from './components/Icons';
-import { UserRole, TemplateConfig, NavItem, User, JobCard, JobCardStatus, PurchaseOrder, Product, Customer, Supplier, Mechanic, Estimate } from './types';
+// Import missing Product type from types.ts to fix Error on line 224
+import { UserRole, TemplateConfig, User, JobCard, JobCardStatus, PurchaseOrder, Customer, Supplier, Mechanic, Estimate, Product } from './types';
 import { NAVIGATION_ITEMS, COMPANY_DETAILS, INITIAL_PRODUCTS, INITIAL_CUSTOMERS, INITIAL_MECHANICS } from './constants';
 import AboutUs from './components/AboutUs';
 import ServiceManagement from './components/ServiceManagement';
@@ -17,18 +18,43 @@ import SupplierManagement from './components/SupplierManagement';
 import MechanicManagement from './components/MechanicManagement';
 import ProductManagement from './components/ProductManagement';
 import EstimateManagement from './components/EstimateManagement';
-import { GangchillLogo, HeaderBranding } from './components/Logo';
+import { GangchillLogo } from './components/Logo';
+
+// Error Boundary Implementation
+interface Props { children: ReactNode; }
+interface State { hasError: boolean; }
+class ErrorBoundary extends Component<Props, State> {
+  public state: State = { hasError: false };
+  public static getDerivedStateFromError(_: Error): State { return { hasError: true }; }
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) { console.error("Uncaught error:", error, errorInfo); }
+  public render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-8 text-center">
+          <div className="bg-white p-12 rounded-[3rem] shadow-2xl max-w-md space-y-6">
+            <Icons.AlertCircle className="mx-auto text-red-500" size={64} />
+            <h2 className="text-2xl font-black text-gray-900 uppercase">System Recovery</h2>
+            <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">The ERP encountered an interface error. Please refresh to restore the technical floor.</p>
+            <button onClick={() => window.location.reload()} className="w-full bg-blue-900 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest">Reload Operations</button>
+          </div>
+        </div>
+      );
+    }
+    // Fixed: Property 'children' does not exist on type 'ErrorBoundary'. Should use this.props.children in class components.
+    return this.props.children;
+  }
+}
 
 const INITIAL_JOBCARDS: JobCard[] = [
   {
     id: 'INS-20240947',
     date: '2024-05-20',
-    customerName: 'Mohammad Rakibul Islam',
-    address: 'Dhaka, Bangladesh',
-    phone: '01700-000000',
-    regNo: 'DHK-7788',
-    chassisNo: 'CH-ABC123XYZ789',
-    engineNo: 'ENG-998811',
+    customerName: 'Md. Mhafuzur Rahman',
+    address: 'V# Boro Rangamatia, PO# Jirabo, PS# Savar, D# Dhaka',
+    phone: '01918360934',
+    regNo: 'Dhaka metro na 13-8941',
+    chassisNo: 'LA71AEB29J0034289',
+    engineNo: 'L750381148B',
     model: 'T-king 1.0 Ton',
     dateIn: '2024-05-20',
     dateOut: '',
@@ -43,7 +69,7 @@ const INITIAL_JOBCARDS: JobCard[] = [
       { id: '1', partNo: '70', partName: 'Engine kit 4JB1', quantity: 1, unitPrice: 3000, totalPrice: 3000, unit: 'Set' }
     ],
     totalLabour: 0,
-    remarks: 'Pre-loaded from master records.',
+    remarks: 'Auto-filled from master records.',
     status: JobCardStatus.COMPLETED,
     grandTotal: 3000,
     invoiceStatus: 'Paid'
@@ -252,114 +278,107 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen font-sans">
-      {/* Header with Al-Amin branding */}
-      <header className="h-16 bg-[#222d32] flex items-center justify-between px-6 shrink-0 z-30 shadow-md">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <GangchillLogo height={40} />
-            <h1 className="text-2xl font-black text-white uppercase tracking-tighter">Gangchill <span className="font-light text-gray-400">Group</span></h1>
-          </div>
-          <div className="h-8 w-px bg-gray-700 hidden md:block"></div>
-          <div className="hidden md:flex items-baseline gap-1">
-             <span className="text-blue-400 font-black uppercase text-xs tracking-widest">Al-Amin Enterprise</span>
-             <span className="text-gray-500 font-bold uppercase text-[10px]">ERP System</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button className="text-gray-400 hover:text-white p-2 relative transition-colors">
-            <Icons.Bell size={20} />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#222d32]"></span>
-          </button>
-          <div className="flex items-center gap-3 pl-4 border-l border-gray-700 cursor-pointer group">
-             <div className="w-9 h-9 bg-[#3c8dbc] rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-900/20 group-hover:scale-105 transition-transform">
-               <Icons.User size={20} />
-             </div>
-             <div className="hidden lg:block text-left">
-               <p className="text-[11px] font-black text-white uppercase tracking-tighter leading-none">{user.fullName}</p>
-               <p className="text-[9px] text-gray-400 font-bold uppercase mt-1 leading-none">{user.role}</p>
-             </div>
-             <Icons.ChevronDown size={14} className="text-gray-500 group-hover:text-white transition-colors" />
-          </div>
-        </div>
-      </header>
-
-      {/* Primary Teal Horizontal Bar Navigation */}
-      <nav className="h-[70px] bg-[#17a2b8] flex items-center px-4 shrink-0 z-20 shadow-xl justify-center sticky top-0 no-print">
-        <div className="flex items-center h-full max-w-7xl w-full">
-          <button 
-            onClick={() => handleNavClick('dashboard')}
-            className={`flex flex-col items-center justify-center px-6 h-full text-white transition-all hover:bg-black/10 border-r border-teal-400/30 ${activeTab === 'dashboard' ? 'bg-black/20 shadow-inner' : ''}`}
-          >
-            <Icons.LayoutDashboard size={24} className="mb-1" />
-            <span className="text-[10px] font-black uppercase tracking-tight">Dashboard</span>
-          </button>
-
-          {NAVIGATION_ITEMS.map(item => (
-            <div key={item.id} className="relative group h-full">
-              <button 
-                onClick={() => handleNavClick(item.id, item.children?.[0]?.id)}
-                className={`flex flex-col items-center justify-center px-5 h-full text-white transition-all hover:bg-black/10 min-w-[130px] border-r border-teal-400/30 ${activeTab === item.id ? 'bg-black/20 shadow-inner' : ''}`}
-              >
-                {/* @ts-ignore */}
-                {React.createElement(Icons[item.icon] || Icons.Box, { size: 24, className: "mb-1" })}
-                <div className="flex items-center gap-1">
-                  <span className="text-[10px] font-black uppercase tracking-tight whitespace-nowrap">{item.label}</span>
-                  {item.children && <Icons.ChevronDown size={10} className="opacity-60" />}
-                </div>
-              </button>
-
-              {item.children && (
-                <div className="absolute left-0 top-full w-60 bg-white shadow-2xl rounded-b-xl overflow-hidden hidden group-hover:block z-50 animate-in fade-in slide-in-from-top-2 duration-200 border-t-2 border-teal-600">
-                  {item.children.map(child => (
-                    <button
-                      key={child.id}
-                      onClick={() => handleNavClick(item.id, child.id)}
-                      className={`w-full text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest transition-all flex items-center gap-4 border-b border-gray-50 last:border-0 ${activeSubTab === child.id ? 'bg-teal-50 text-teal-600 pl-7 shadow-inner' : 'text-gray-600 hover:bg-gray-50 hover:pl-6'}`}
-                    >
-                      {/* @ts-ignore */}
-                      {React.createElement(Icons[child.icon] || Icons.ChevronRight, { size: 14, className: activeSubTab === child.id ? 'text-teal-600' : 'text-gray-400' })}
-                      {child.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+    <ErrorBoundary>
+      <div className="flex flex-col min-h-screen font-sans">
+        {/* Header with Al-Amin branding */}
+        <header className="h-16 bg-[#222d32] flex items-center justify-between px-6 shrink-0 z-30 shadow-md">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <GangchillLogo height={40} />
+              <h1 className="text-2xl font-black text-white uppercase tracking-tighter">Gangchill <span className="font-light text-gray-400">Group</span></h1>
             </div>
-          ))}
-          
-          <button className="flex flex-col items-center justify-center px-6 h-full text-white transition-all hover:bg-black/10 min-w-[120px]">
-            <Icons.Map size={24} className="mb-1" />
-            <div className="flex items-center gap-1">
-              <span className="text-[10px] font-black uppercase tracking-tight">GPS Track</span>
-              <Icons.ChevronDown size={10} className="opacity-60" />
+            <div className="h-8 w-px bg-gray-700 hidden md:block"></div>
+            <div className="hidden md:flex items-baseline gap-1">
+               <span className="text-blue-400 font-black uppercase text-xs tracking-widest">Al-Amin Enterprise</span>
+               <span className="text-gray-500 font-bold uppercase text-[10px]">ERP System</span>
             </div>
-          </button>
-        </div>
-      </nav>
+          </div>
 
-      {/* Main Branding Header for Print/Visibility (Optional overlay) */}
-      <div className="bg-white px-8 py-2 border-b border-gray-200 hidden md:block no-print">
-         <div className="flex justify-between items-center text-[10px] font-black uppercase text-gray-400 tracking-[0.2em]">
-            <span>Gazipura Branch</span>
-            <span>Technical Operations Terminal v2.5</span>
-            <span className="text-teal-600">Secure Protocol: Active</span>
-         </div>
+          <div className="flex items-center gap-4">
+            <button className="text-gray-400 hover:text-white p-2 relative transition-colors">
+              <Icons.Bell size={20} />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#222d32]"></span>
+            </button>
+            <div className="flex items-center gap-3 pl-4 border-l border-gray-700 cursor-pointer group">
+               <div className="w-9 h-9 bg-[#3c8dbc] rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-900/20 group-hover:scale-105 transition-transform">
+                 <Icons.User size={20} />
+               </div>
+               <div className="hidden lg:block text-left">
+                 <p className="text-[11px] font-black text-white uppercase tracking-tighter leading-none">{user.fullName}</p>
+                 <p className="text-[9px] text-gray-400 font-bold uppercase mt-1 leading-none">{user.role}</p>
+               </div>
+               <Icons.ChevronDown size={14} className="text-gray-500 group-hover:text-white transition-colors" />
+            </div>
+          </div>
+        </header>
+
+        {/* Primary Teal Horizontal Bar Navigation */}
+        <nav className="h-[70px] bg-[#17a2b8] flex items-center px-4 shrink-0 z-20 shadow-xl justify-center sticky top-0 no-print">
+          <div className="flex items-center h-full max-w-7xl w-full">
+            <button 
+              onClick={() => handleNavClick('dashboard')}
+              className={`flex flex-col items-center justify-center px-6 h-full text-white transition-all hover:bg-black/10 border-r border-teal-400/30 ${activeTab === 'dashboard' ? 'bg-black/20 shadow-inner' : ''}`}
+            >
+              <Icons.LayoutDashboard size={24} className="mb-1" />
+              <span className="text-[10px] font-black uppercase tracking-tight">Dashboard</span>
+            </button>
+
+            {NAVIGATION_ITEMS.map(item => (
+              <div key={item.id} className="relative group h-full">
+                <button 
+                  onClick={() => handleNavClick(item.id, item.children?.[0]?.id)}
+                  className={`flex flex-col items-center justify-center px-5 h-full text-white transition-all hover:bg-black/10 min-w-[130px] border-r border-teal-400/30 ${activeTab === item.id ? 'bg-black/20 shadow-inner' : ''}`}
+                >
+                  {/* @ts-ignore */}
+                  {React.createElement(Icons[item.icon] || Icons.Box, { size: 24, className: "mb-1" })}
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] font-black uppercase tracking-tight whitespace-nowrap">{item.label}</span>
+                    {item.children && <Icons.ChevronDown size={10} className="opacity-60" />}
+                  </div>
+                </button>
+
+                {item.children && (
+                  <div className="absolute left-0 top-full w-60 bg-white shadow-2xl rounded-b-xl overflow-hidden hidden group-hover:block z-50 animate-in fade-in slide-in-from-top-2 duration-200 border-t-2 border-teal-600">
+                    {item.children.map(child => (
+                      <button
+                        key={child.id}
+                        onClick={() => handleNavClick(item.id, child.id)}
+                        className={`w-full text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest transition-all flex items-center gap-4 border-b border-gray-50 last:border-0 ${activeSubTab === child.id ? 'bg-teal-50 text-teal-600 pl-7 shadow-inner' : 'text-gray-600 hover:bg-gray-50 hover:pl-6'}`}
+                      >
+                        {/* @ts-ignore */}
+                        {React.createElement(Icons[child.icon] || Icons.ChevronRight, { size: 14, className: activeSubTab === child.id ? 'text-teal-600' : 'text-gray-400' })}
+                        {child.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            
+            <button className="flex flex-col items-center justify-center px-6 h-full text-white transition-all hover:bg-black/10 min-w-[120px]">
+              <Icons.Map size={24} className="mb-1" />
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] font-black uppercase tracking-tight">GPS Track</span>
+                <Icons.ChevronDown size={10} className="opacity-60" />
+              </div>
+            </button>
+          </div>
+        </nav>
+
+        <main className="flex-1 overflow-y-auto bg-[#ecf0f5] scroll-smooth">
+          {renderContent()}
+        </main>
+
+        <footer className="bg-white border-t border-gray-200 py-3 px-8 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex justify-between shrink-0 no-print">
+          <div className="flex items-center gap-4">
+            <span className="text-blue-900 font-black">M/S Al-Amin Enterprise</span>
+            <span className="h-3 w-px bg-gray-200"></span>
+            <span>Official ERP Solution</span>
+          </div>
+          <div>All rights reserved © 2017-2024 Gangchill Group</div>
+        </footer>
       </div>
-
-      <main className="flex-1 overflow-y-auto bg-[#ecf0f5] scroll-smooth">
-        {renderContent()}
-      </main>
-
-      <footer className="bg-white border-t border-gray-200 py-3 px-8 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex justify-between shrink-0 no-print">
-        <div className="flex items-center gap-4">
-          <span className="text-blue-900 font-black">M/S Al-Amin Enterprise</span>
-          <span className="h-3 w-px bg-gray-200"></span>
-          <span>Official ERP Solution</span>
-        </div>
-        <div>All rights reserved © 2017-2024 Gangchill Group</div>
-      </footer>
-    </div>
+    </ErrorBoundary>
   );
 };
 
