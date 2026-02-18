@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const GangchillLogo: React.FC<{ height?: number; className?: string }> = ({ height = 80, className = "" }) => (
@@ -58,20 +59,25 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
 };
 
 export const SeizeHeaderBranding: React.FC<{ title: string; address: string; contact: string }> = ({ title, address, contact }) => (
-  <div className="flex justify-between items-center border-b border-black pb-2 mb-2 bg-white">
-    <div className="w-[20%] flex justify-start"><GangchillLogo height={40} /></div>
-    <div className="w-[60%] text-center flex flex-col items-center">
-      <div className="bg-gray-100 px-4 py-0.5 border-2 border-black font-black uppercase tracking-[0.1em] text-[12px] mb-1">
+  <div className="flex justify-between items-start mb-2 bg-white relative">
+    {/* Corner Logos */}
+    <div className="absolute left-0 top-0"><GangchillLogo height={45} /></div>
+    <div className="absolute right-0 top-0"><TKingLogo height={55} /></div>
+    
+    {/* Centered Technical Branding */}
+    <div className="w-full flex flex-col items-center mt-1">
+      <div className="px-6 py-0.5 border-2 border-black font-black uppercase tracking-[0.2em] text-[13px] bg-gray-100 print:bg-white mb-1.5 shadow-sm">
         {title}
       </div>
       <div className="flex items-center gap-1.5 leading-none">
-        <span className="text-[14px] font-black text-gray-900 italic">M/S.</span>
-        <h1 className="brand-ragtime text-[32px] text-blue-900 uppercase">Al-AMIN</h1>
-        <h1 className="brand-articpro text-[32px] text-gray-700 italic">Enterprise</h1>
+        <span className="text-[12px] font-black text-gray-900 italic">M/S.</span>
+        <h1 className="brand-ragtime text-[34px] text-blue-900 uppercase">Al-AMIN</h1>
+        <h1 className="brand-articpro text-[34px] text-gray-700 italic">Enterprise</h1>
       </div>
-      <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tight mt-1">{address}</p>
-      <p className="text-[8px] font-black text-gray-400">{contact}</p>
+      <div className="mt-2 text-center">
+        <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tighter leading-tight">{address}</p>
+        <p className="text-[8px] font-black text-gray-400 leading-tight">{contact}</p>
+      </div>
     </div>
-    <div className="w-[20%] flex justify-end"><TKingLogo height={50} /></div>
   </div>
 );

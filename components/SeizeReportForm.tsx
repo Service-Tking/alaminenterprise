@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Icons } from './Icons';
 import { SeizeList, PaperState } from '../types';
@@ -99,12 +100,12 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
     depoSignatory: { name: 'Md. Eaqub Ali', mobile: '01678-819779' },
   });
 
-  const handlePaperCycle = (paperKey: keyof typeof formData.papers) => {
+  const handlePaperToggle = (paperKey: keyof typeof formData.papers) => {
     const current = formData.papers[paperKey];
     let next: PaperState = null;
-    if (current === null) next = true; // Tick ✔
-    else if (current === true) next = 'cross'; // Cross ✖
-    else if (current === 'cross') next = null; // Clear
+    if (current === null) next = true; // Tick
+    else if (current === true) next = 'cross'; // Cross
+    else if (current === 'cross') next = null; // Blank
 
     setFormData(prev => ({
       ...prev,
@@ -113,27 +114,27 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
   };
 
   const handleInspectionSelect = (item: string, option: string) => {
-    // If user clicks the same option again, we can toggle off or just keep it (standard radio behavior)
-    // We treat this as a radio selection per row.
-    setFormData(prev => ({
-      ...prev,
-      inspectionReport: { 
-        ...prev.inspectionReport, 
-        [item]: prev.inspectionReport[item] === option ? '' : option 
-      },
-      condition: item === 'Condition' ? (prev.condition === option ? '' : option as any) : prev.condition
-    }));
+    // Radio behavior: setting the key overwrites any previous value for that row
+    if (item === 'Condition') {
+      setFormData(prev => ({ ...prev, condition: option as any }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        inspectionReport: { ...prev.inspectionReport, [item]: option },
+      }));
+    }
   };
 
   const renderCheckmark = (state: PaperState) => {
-    if (state === true) return <span className="text-green-600 font-black">✔</span>;
-    if (state === 'cross') return <span className="text-red-600 font-black">✖</span>;
+    if (state === true) return <span className="text-green-600 font-bold">✔</span>;
+    if (state === 'cross') return <span className="text-red-600 font-bold">✖</span>;
     return null;
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-[200] overflow-x-auto overflow-y-auto flex items-start justify-center p-2 backdrop-blur-sm no-print">
-      <div className="bg-white p-5 shadow-2xl rounded-sm border border-gray-300 font-serif text-black min-w-[850px] max-w-full overflow-hidden flex flex-col h-[98vh] scale-95 origin-top">
+    <div className="fixed inset-0 bg-black/80 z-[200] overflow-auto flex items-start justify-center p-2 backdrop-blur-sm no-print">
+      {/* Strict A4 Page Container */}
+      <div className="bg-white p-4 shadow-2xl rounded-sm border border-gray-300 font-serif text-black w-[210mm] h-[297mm] flex flex-col relative overflow-hidden">
         
         <SeizeHeaderBranding 
           title="INSPECTION REPORT OF SEIZE VEHICLE" 
@@ -141,10 +142,11 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
           contact="Cell: 01678819779, 01978819819, E-mail: Service@alamin-bd.com"
         />
 
-        <div className="flex justify-between items-center mb-1 px-1 text-[11px] shrink-0 font-bold uppercase">
+        {/* Ref and Date Bar */}
+        <div className="flex justify-between items-center mb-1 px-1 text-[11px] font-bold uppercase shrink-0">
           <div className="flex items-center gap-1">
             <span>Ref No:</span>
-            <input className="border-b border-black outline-none px-1 w-24 bg-transparent" value={formData.id} onChange={e => setFormData({...formData, id: e.target.value})} />
+            <input className="border-b border-black outline-none px-1 w-28 bg-transparent" value={formData.id} onChange={e => setFormData({...formData, id: e.target.value})} />
           </div>
           <div className="flex items-center gap-1">
             <span>Date:</span>
@@ -155,35 +157,33 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
           </div>
         </div>
 
-        {/* Info Grid */}
+        {/* Form Info Grid - High Density */}
         <div className="border border-black bg-white overflow-hidden text-[10px] mb-1 shrink-0">
-          <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-            <div className="flex items-center px-1.5 py-0.5"><span className="w-24 font-bold">Cust ID:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.customerIdNo} onChange={e => setFormData({...formData, customerIdNo: e.target.value})} /></div>
-            <div className="flex items-center px-1.5 py-0.5"><span className="w-24 font-bold">Reg No:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.registrationNo} onChange={e => setFormData({...formData, registrationNo: e.target.value})} /></div>
+          <div className="grid grid-cols-2 divide-x divide-black border-b border-black h-6 items-center">
+            <div className="flex items-center px-1.5 h-full"><span className="w-24 font-bold">Cust ID:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.customerIdNo} onChange={e => setFormData({...formData, customerIdNo: e.target.value})} /></div>
+            <div className="flex items-center px-1.5 h-full"><span className="w-24 font-bold">Reg No:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.registrationNo} onChange={e => setFormData({...formData, registrationNo: e.target.value})} /></div>
           </div>
-          <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-            <div className="flex items-center px-1.5 py-0.5"><span className="w-24 font-bold">Customer:</span><input className="flex-1 bg-transparent border-none outline-none font-bold uppercase" value={formData.customerName} onChange={e => setFormData({...formData, customerName: e.target.value})} /></div>
-            <div className="flex items-center px-1.5 py-0.5"><span className="w-24 font-bold">Chassis:</span><input className="flex-1 bg-transparent border-none outline-none font-bold font-mono" value={formData.chassisNo} onChange={e => setFormData({...formData, chassisNo: e.target.value})} /></div>
+          <div className="grid grid-cols-2 divide-x divide-black border-b border-black h-6 items-center">
+            <div className="flex items-center px-1.5 h-full"><span className="w-24 font-bold">Customer:</span><input className="flex-1 bg-transparent border-none outline-none font-bold uppercase" value={formData.customerName} onChange={e => setFormData({...formData, customerName: e.target.value})} /></div>
+            <div className="flex items-center px-1.5 h-full"><span className="w-24 font-bold">Chassis:</span><input className="flex-1 bg-transparent border-none outline-none font-bold font-mono" value={formData.chassisNo} onChange={e => setFormData({...formData, chassisNo: e.target.value})} /></div>
           </div>
-          <div className="flex items-center px-1.5 py-0.5 border-b border-black">
+          <div className="flex items-center px-1.5 border-b border-black h-6 items-center">
             <span className="w-24 font-bold">Address:</span>
             <input className="flex-1 bg-transparent border-none outline-none font-bold italic" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} />
           </div>
-          <div className="grid grid-cols-2 divide-x divide-black">
-            <div className="flex items-center px-1.5 py-0.5"><span className="w-24 font-bold">Officer:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.officerName} onChange={e => setFormData({...formData, officerName: e.target.value})} /></div>
-            <div className="flex items-center px-1.5 py-0.5"><span className="w-24 font-bold">Depo:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.nameOfDepo} onChange={e => setFormData({...formData, nameOfDepo: e.target.value})} /></div>
+          <div className="grid grid-cols-2 divide-x divide-black h-6 items-center">
+            <div className="flex items-center px-1.5 h-full"><span className="w-24 font-bold">Officer:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.officerName} onChange={e => setFormData({...formData, officerName: e.target.value})} /></div>
+            <div className="flex items-center px-1.5 h-full"><span className="w-24 font-bold">Depo:</span><input className="flex-1 bg-transparent border-none outline-none font-bold" value={formData.nameOfDepo} onChange={e => setFormData({...formData, nameOfDepo: e.target.value})} /></div>
           </div>
         </div>
 
-        {/* Papers Section Checklist */}
+        {/* Papers Checklist */}
         <div className="border border-black p-1 mb-1 bg-white text-[9px] shrink-0">
-          <div className="flex justify-between items-center px-1 mb-0.5">
-             <h4 className="font-bold underline uppercase">Papers Checklist (✔/✖ cycle):</h4>
-          </div>
+          <h4 className="font-bold underline uppercase mb-0.5 ml-1">Papers Checklist (3-State Click):</h4>
           <div className="grid grid-cols-4 gap-y-0.5 px-2">
             {Object.keys(formData.papers).map((paperKey) => (
-              <div key={paperKey} className="flex items-center gap-2 cursor-pointer select-none" onClick={() => handlePaperCycle(paperKey as keyof typeof formData.papers)}>
-                <div className="w-3.5 h-3.5 border border-black flex items-center justify-center text-[10px]">
+              <div key={paperKey} className="flex items-center gap-1.5 cursor-pointer select-none" onClick={() => handlePaperToggle(paperKey as keyof typeof formData.papers)}>
+                <div className="w-3 h-3 border border-black flex items-center justify-center text-[9px]">
                   {renderCheckmark(formData.papers[paperKey as keyof typeof formData.papers])}
                 </div>
                 <label className="capitalize font-bold cursor-pointer whitespace-nowrap">
@@ -194,19 +194,19 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
           </div>
         </div>
 
-        {/* Inspection Report Table */}
+        {/* Inspection Report Section */}
         <div className="border border-black overflow-hidden flex-1 bg-white flex flex-col mb-1 min-h-0">
           <h3 className="bg-gray-100 p-0.5 text-center font-bold uppercase border-b border-black text-[11px] shrink-0">Inspection Grid (Radio Selection)</h3>
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-hidden">
             <div className="grid grid-cols-2 divide-x divide-black h-full">
-              {/* Left Side */}
+              {/* Left Column */}
               <div className="divide-y divide-black">
                 {INSPECTION_ITEMS_LEFT.map((item) => (
-                  <div key={item.label} className="grid grid-cols-2 h-[19px] items-center px-1.5 hover:bg-gray-50 transition-colors">
+                  <div key={item.label} className="grid grid-cols-2 h-[19px] items-center px-1.5 hover:bg-gray-50">
                     <span className="font-bold text-[9px] truncate uppercase">{item.label}</span>
                     <div className="flex justify-between px-0.5">
                       {item.options.map((opt) => (
-                        <div key={opt} className="flex items-center gap-0.5 cursor-pointer select-none" onClick={() => handleInspectionSelect(item.label, opt)}>
+                        <div key={opt} className="flex items-center gap-0.5 cursor-pointer" onClick={() => handleInspectionSelect(item.label, opt)}>
                           <div className={`w-2.5 h-2.5 border border-black flex items-center justify-center text-[7px] font-bold ${formData.inspectionReport[item.label] === opt ? 'bg-blue-900 text-white' : ''}`}>
                             {formData.inspectionReport[item.label] === opt ? 'X' : ''}
                           </div>
@@ -217,15 +217,15 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
                   </div>
                 ))}
               </div>
-              {/* Right Side */}
+              {/* Right Column */}
               <div className="divide-y divide-black">
                 {INSPECTION_ITEMS_RIGHT.map((item) => (
-                  <div key={item.label} className="grid grid-cols-2 h-[19px] items-center px-1.5 hover:bg-gray-50 transition-colors">
+                  <div key={item.label} className="grid grid-cols-2 h-[19px] items-center px-1.5 hover:bg-gray-50">
                     <span className="font-bold text-[9px] truncate uppercase">{item.label}</span>
                     <div className="flex justify-between px-0.5">
                       {item.options.length > 0 ? (
                         item.options.map((opt) => (
-                          <div key={opt} className="flex items-center gap-0.5 cursor-pointer select-none" onClick={() => handleInspectionSelect(item.label, opt)}>
+                          <div key={opt} className="flex items-center gap-0.5 cursor-pointer" onClick={() => handleInspectionSelect(item.label, opt)}>
                             <div className={`w-2.5 h-2.5 border border-black flex items-center justify-center text-[7px] font-bold ${ (item.label === 'Condition' ? formData.condition === opt : formData.inspectionReport[item.label] === opt) ? 'bg-blue-900 text-white' : ''}`}>
                               {(item.label === 'Condition' ? formData.condition === opt : formData.inspectionReport[item.label] === opt) ? 'X' : ''}
                             </div>
@@ -233,7 +233,7 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
                           </div>
                         ))
                       ) : (
-                        <input className="flex-1 border-b border-gray-200 outline-none text-[9px] bg-transparent ml-2 h-3" />
+                        <input className="flex-1 border-b border-gray-200 outline-none text-[9px] bg-transparent ml-2 h-3" placeholder="..." />
                       )}
                     </div>
                   </div>
@@ -245,28 +245,32 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
 
         <div className="border border-black flex flex-col mb-1 shrink-0 h-10">
           <div className="bg-gray-50 border-b border-black px-1.5 py-0.5 font-bold uppercase text-[9px]">Remarks:</div>
-          <textarea className="w-full px-1.5 outline-none italic text-[9px] text-gray-700 bg-white resize-none leading-tight" value={formData.remarks} onChange={e => setFormData({ ...formData, remarks: e.target.value })} />
+          <textarea className="w-full px-1.5 outline-none italic text-[9px] text-gray-700 bg-white resize-none h-full" value={formData.remarks} onChange={e => setFormData({ ...formData, remarks: e.target.value })} />
         </div>
 
-        {/* Footer */}
-        <div className="grid grid-cols-3 gap-6 text-[10px] font-bold shrink-0 mt-0.5 pb-1">
-          <div>
-            <p className="text-center border-b border-gray-300 mb-2">Assigner</p>
-            <div className="flex items-center gap-1"><span className="text-[8px]">Name:</span><input className="flex-1 border-b border-black bg-transparent outline-none text-[9px]" value={formData.assigner.name} onChange={e => setFormData({...formData, assigner: {...formData.assigner, name: e.target.value}})} /></div>
+        {/* Compact Footer */}
+        <div className="grid grid-cols-3 gap-4 text-[9px] font-bold shrink-0 mt-1 mb-2">
+          <div className="flex flex-col items-center">
+            <p className="border-b border-gray-300 w-full text-center pb-0.5 mb-6 uppercase tracking-widest">Assigner Signature</p>
+            <div className="flex items-center gap-1 w-full"><span className="text-[8px]">Name:</span><input className="flex-1 border-b border-black bg-transparent outline-none" value={formData.assigner.name} onChange={e => setFormData({...formData, assigner: {...formData.assigner, name: e.target.value}})} /></div>
           </div>
-          <div>
-            <p className="text-center border-b border-gray-300 mb-2">Officer</p>
-            <div className="flex items-center gap-1"><span className="text-[8px]">Name:</span><input className="flex-1 border-b border-black bg-transparent outline-none text-[9px]" value={formData.officers.name} onChange={e => setFormData({...formData, officers: {...formData.officers, name: e.target.value}})} /></div>
+          <div className="flex flex-col items-center">
+            <p className="border-b border-gray-300 w-full text-center pb-0.5 mb-6 uppercase tracking-widest">Officer Signature</p>
+            <div className="flex items-center gap-1 w-full"><span className="text-[8px]">Name:</span><input className="flex-1 border-b border-black bg-transparent outline-none" value={formData.officers.name} onChange={e => setFormData({...formData, officers: {...formData.officers, name: e.target.value}})} /></div>
           </div>
-          <div>
-            <p className="text-center border-b border-gray-300 mb-1">Depo Signature</p>
-            <div className="text-[9px] leading-tight font-black">{formData.depoSignatory.name}<br/><span className="text-gray-500 font-bold">{formData.depoSignatory.mobile}</span></div>
+          <div className="flex flex-col items-center">
+            <p className="border-b border-gray-300 w-full text-center pb-0.5 mb-1 uppercase tracking-widest">Authorized Representative</p>
+            <div className="text-[9px] leading-tight font-black uppercase text-center mt-4">
+              {formData.depoSignatory.name}<br/>
+              <span className="text-gray-500">{formData.depoSignatory.mobile}</span>
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 mt-auto pt-2 shrink-0 no-print border-t border-gray-100">
-          <button onClick={onCancel} className="px-4 py-1.5 text-gray-400 font-bold uppercase text-[9px] hover:text-red-500 transition-colors">Discard</button>
-          <button onClick={() => onSave(formData)} className="bg-blue-900 text-white px-6 py-1.5 rounded-sm font-bold uppercase text-[9px] tracking-widest shadow-xl active:scale-95 transition-all">Confirm Report</button>
+        {/* Confirmation Bar */}
+        <div className="flex justify-end gap-2 shrink-0 no-print border-t border-gray-100 pt-2 pb-1">
+          <button onClick={onCancel} className="px-4 py-1 text-gray-400 font-bold uppercase text-[9px] hover:text-red-500">Discard</button>
+          <button onClick={() => onSave(formData)} className="bg-blue-900 text-white px-6 py-1.5 rounded-sm font-black uppercase text-[9px] tracking-widest shadow-xl active:scale-95 transition-all">Save Registry</button>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,6 @@
       padding: 0;
     }
     
-    /* Branding Font Simulations */
     .brand-ragtime {
       font-family: 'Inter', sans-serif;
       font-weight: 900;
@@ -29,23 +29,10 @@
       font-style: italic;
     }
 
-    /* Scrollbar Styling */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-    /* Print Optimizations */
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; -webkit-print-color-adjust: exact; }
       @page { size: A4; margin: 0; }
-    }
-
-    /* Form Visibility Fixes */
-    .compact-input {
-      padding: 0.25rem 0.5rem !important;
-      font-size: 0.75rem !important;
     }
   </style>
 <script type="importmap">
@@ -56,15 +43,14 @@
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
     "react/": "https://esm.sh/react@^19.2.4/",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4",
-    "vite": "https://esm.sh/vite@^7.3.1"
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4"
   }
 }
 </script>
 </head>
-<body class="text-gray-900">
+<body>
   <div id="root"></div>
-  <!-- Primary entry point renamed to main.tsx for Vercel/Vite standard compatibility -->
   <script type="module" src="./main.tsx"></script>
 </body>
 </html>
