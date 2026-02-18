@@ -17,7 +17,7 @@ import SupplierManagement from './components/SupplierManagement';
 import MechanicManagement from './components/MechanicManagement';
 import ProductManagement from './components/ProductManagement';
 import EstimateManagement from './components/EstimateManagement';
-import { GangchillLogo } from './components/Logo';
+import { GangchillLogo, HeaderBranding } from './components/Logo';
 
 const INITIAL_JOBCARDS: JobCard[] = [
   {
@@ -134,37 +134,33 @@ const DashboardOverview = ({ role }: { role: UserRole }) => {
       </div>
 
       <div className="grid lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-8 bg-white border border-gray-200 shadow-sm rounded-sm">
+        <div className="lg:col-span-8 bg-white border border-gray-200 shadow-sm rounded-sm overflow-hidden">
           <div className="bg-[#f4f4f4] px-4 py-3 border-b flex items-center gap-2">
             <Icons.Users size={16} className="text-gray-600" />
-            <h3 className="font-bold text-gray-600 text-sm">Recent User Logins List</h3>
+            <h3 className="font-bold text-gray-600 text-sm uppercase">Recent User Logins</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b bg-white">
-                  <th className="px-4 py-3 text-sm font-bold text-gray-800">Full Name</th>
-                  <th className="px-4 py-3 text-sm font-bold text-gray-800">Branch</th>
-                  <th className="px-4 py-3 text-sm font-bold text-gray-800">Status</th>
+                  <th className="px-4 py-3 text-sm font-bold text-gray-800 uppercase tracking-tighter">Full Name</th>
+                  <th className="px-4 py-3 text-sm font-bold text-gray-800 uppercase tracking-tighter">Branch</th>
+                  <th className="px-4 py-3 text-sm font-bold text-gray-800 uppercase tracking-tighter text-center">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 <tr>
-                  <td className="px-4 py-3 text-sm text-gray-600">Mohammad Rakibul Islam</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">Gazipura</td>
-                  <td className="px-4 py-3">
-                    <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">
-                      Online
-                    </span>
+                  <td className="px-4 py-3 text-sm text-gray-600 font-bold">Mohammad Rakibul Islam</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 font-medium">Gazipura</td>
+                  <td className="px-4 py-3 text-center">
+                    <span className="bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded uppercase">Online</span>
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 text-sm text-gray-600">Md. Eaqub Ali</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">Gazipura</td>
-                  <td className="px-4 py-3">
-                    <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">
-                      Online
-                    </span>
+                  <td className="px-4 py-3 text-sm text-gray-600 font-bold">Md. Eaqub Ali</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 font-medium">Gazipura</td>
+                  <td className="px-4 py-3 text-center">
+                    <span className="bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded uppercase">Online</span>
                   </td>
                 </tr>
               </tbody>
@@ -175,16 +171,16 @@ const DashboardOverview = ({ role }: { role: UserRole }) => {
         <div className="lg:col-span-4 bg-white border border-gray-200 shadow-sm rounded-sm">
           <div className="bg-[#f4f4f4] px-4 py-3 border-b flex items-center gap-2">
             <Icons.CheckCircle2 size={16} className="text-gray-600" />
-            <h3 className="font-bold text-gray-600 text-sm">Welcome</h3>
+            <h3 className="font-bold text-gray-600 text-sm uppercase">System Status</h3>
           </div>
           <div className="p-8 text-center space-y-6">
-            <h3 className="text-2xl font-light text-gray-700">Your Gangchill Group ERP is ...</h3>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <h3 className="text-2xl font-light text-gray-700">Your Gangchill Group ERP is <span className="text-green-600 font-black">ACTIVE</span></h3>
+            <p className="text-xs text-gray-500 leading-relaxed uppercase font-bold tracking-widest">
               Industry-specific ERP solutions for agile, flexible and tightly integrated operations!
             </p>
-            <div className="pt-10 text-[11px] text-gray-400 space-y-1">
-              <p>All rights reserved by <span className="text-blue-500 font-bold">Gangchill Group</span> ©</p>
-              <p>2017-2018</p>
+            <div className="pt-10 text-[10px] text-gray-400 space-y-1 font-black uppercase tracking-widest">
+              <p>All rights reserved by <span className="text-blue-500">Gangchill Group</span> ©</p>
+              <p>2017-2024</p>
             </div>
           </div>
         </div>
@@ -235,41 +231,16 @@ const App: React.FC = () => {
       case 'accounts':
         return <AccountsManagement activeSubTab={activeSubTab} />;
       case 'procurement':
-        return <ProcurementManagement 
-          activeSubTab={activeSubTab} 
-          purchaseOrders={purchaseOrders} 
-          onUpdatePurchaseOrders={setPurchaseOrders} 
-        />;
+        return <ProcurementManagement activeSubTab={activeSubTab} purchaseOrders={purchaseOrders} onUpdatePurchaseOrders={setPurchaseOrders} />;
       case 'sales':
         if (activeSubTab === 'sales-estimate') return <EstimateManagement estimates={estimates} onUpdateEstimates={setEstimates} products={products} />;
-        return <SalesManagement 
-          activeSubTab={activeSubTab} 
-          jobCards={jobCards} 
-          onUpdateJobCards={setJobCards}
-          products={products}
-        />;
+        return <SalesManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} products={products} />;
       case 'inventory':
-        return <InventoryManagement 
-          templates={templates}
-          activeSubTab={activeSubTab}
-          purchaseOrders={purchaseOrders}
-          onUpdatePurchaseOrders={setPurchaseOrders}
-          products={products}
-          onUpdateProducts={setProducts}
-        />;
+        return <InventoryManagement templates={templates} activeSubTab={activeSubTab} purchaseOrders={purchaseOrders} onUpdatePurchaseOrders={setPurchaseOrders} products={products} onUpdateProducts={setProducts} />;
       case 'store':
-        return <StoreManagement 
-          activeSubTab={activeSubTab}
-          jobCards={jobCards}
-          onUpdateJobCards={setJobCards}
-        />;
+        return <StoreManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} />;
       case 'service':
-        return <ServiceManagement 
-          activeSubTab={activeSubTab}
-          jobCards={jobCards}
-          onUpdateJobCards={setJobCards}
-          products={products}
-        />;
+        return <ServiceManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} products={products} />;
       default:
         return <DashboardOverview role={user.role} />;
     }
@@ -281,69 +252,74 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="h-14 bg-[#222d32] flex items-center justify-between px-6 shrink-0 z-20">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <GangchillLogo height={32} />
-            <h1 className="text-xl font-bold text-white uppercase tracking-tighter">Gangchill <span className="font-light">Group</span></h1>
+    <div className="flex flex-col min-h-screen font-sans">
+      {/* Header with Al-Amin branding */}
+      <header className="h-16 bg-[#222d32] flex items-center justify-between px-6 shrink-0 z-30 shadow-md">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <GangchillLogo height={40} />
+            <h1 className="text-2xl font-black text-white uppercase tracking-tighter">Gangchill <span className="font-light text-gray-400">Group</span></h1>
           </div>
-          <div className="flex items-center gap-3 ml-6">
-            <button className="text-blue-400 hover:text-blue-300 relative">
-              <Icons.Bell size={18} />
-            </button>
+          <div className="h-8 w-px bg-gray-700 hidden md:block"></div>
+          <div className="hidden md:flex items-baseline gap-1">
+             <span className="text-blue-400 font-black uppercase text-xs tracking-widest">Al-Amin Enterprise</span>
+             <span className="text-gray-500 font-bold uppercase text-[10px]">ERP System</span>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-white/5 transition-all">
-             <div className="w-8 h-8 bg-[#3c8dbc] rounded-full flex items-center justify-center text-white">
-               <Icons.User size={18} />
+          <button className="text-gray-400 hover:text-white p-2 relative transition-colors">
+            <Icons.Bell size={20} />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#222d32]"></span>
+          </button>
+          <div className="flex items-center gap-3 pl-4 border-l border-gray-700 cursor-pointer group">
+             <div className="w-9 h-9 bg-[#3c8dbc] rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-900/20 group-hover:scale-105 transition-transform">
+               <Icons.User size={20} />
              </div>
-             <div className="hidden md:block text-left leading-none">
-               <p className="text-[11px] font-bold text-white uppercase">{user.fullName}</p>
-               <p className="text-[9px] text-gray-400 uppercase mt-0.5">{user.role}</p>
+             <div className="hidden lg:block text-left">
+               <p className="text-[11px] font-black text-white uppercase tracking-tighter leading-none">{user.fullName}</p>
+               <p className="text-[9px] text-gray-400 font-bold uppercase mt-1 leading-none">{user.role}</p>
              </div>
-             <Icons.ChevronDown size={14} className="text-gray-500" />
+             <Icons.ChevronDown size={14} className="text-gray-500 group-hover:text-white transition-colors" />
           </div>
         </div>
       </header>
 
-      {/* Primary Teal Navigation Bar */}
-      <nav className="h-[76px] bg-[#17a2b8] flex items-center px-4 shrink-0 z-10 shadow-lg justify-center">
-        <div className="flex items-center h-full">
+      {/* Primary Teal Horizontal Bar Navigation */}
+      <nav className="h-[70px] bg-[#17a2b8] flex items-center px-4 shrink-0 z-20 shadow-xl justify-center sticky top-0 no-print">
+        <div className="flex items-center h-full max-w-7xl w-full">
           <button 
             onClick={() => handleNavClick('dashboard')}
-            className={`flex flex-col items-center justify-center px-6 h-full text-white transition-all hover:bg-black/10 ${activeTab === 'dashboard' ? 'bg-black/15 shadow-inner' : ''}`}
+            className={`flex flex-col items-center justify-center px-6 h-full text-white transition-all hover:bg-black/10 border-r border-teal-400/30 ${activeTab === 'dashboard' ? 'bg-black/20 shadow-inner' : ''}`}
           >
-            <Icons.LayoutDashboard size={22} className="mb-1" />
-            <span className="text-[10.5px] font-black uppercase tracking-tight">Dashboard</span>
+            <Icons.LayoutDashboard size={24} className="mb-1" />
+            <span className="text-[10px] font-black uppercase tracking-tight">Dashboard</span>
           </button>
 
           {NAVIGATION_ITEMS.map(item => (
             <div key={item.id} className="relative group h-full">
               <button 
                 onClick={() => handleNavClick(item.id, item.children?.[0]?.id)}
-                className={`flex flex-col items-center justify-center px-5 h-full text-white transition-all hover:bg-black/10 min-w-[125px] ${activeTab === item.id ? 'bg-black/15 shadow-inner' : ''}`}
+                className={`flex flex-col items-center justify-center px-5 h-full text-white transition-all hover:bg-black/10 min-w-[130px] border-r border-teal-400/30 ${activeTab === item.id ? 'bg-black/20 shadow-inner' : ''}`}
               >
                 {/* @ts-ignore */}
-                {React.createElement(Icons[item.icon] || Icons.Box, { size: 22, className: "mb-1" })}
+                {React.createElement(Icons[item.icon] || Icons.Box, { size: 24, className: "mb-1" })}
                 <div className="flex items-center gap-1">
-                  <span className="text-[10.5px] font-black uppercase tracking-tight whitespace-nowrap">{item.label}</span>
-                  {item.children && <Icons.ChevronDown size={10} />}
+                  <span className="text-[10px] font-black uppercase tracking-tight whitespace-nowrap">{item.label}</span>
+                  {item.children && <Icons.ChevronDown size={10} className="opacity-60" />}
                 </div>
               </button>
 
               {item.children && (
-                <div className="absolute left-0 top-full w-56 bg-white shadow-2xl rounded-b-lg overflow-hidden hidden group-hover:block z-50 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="absolute left-0 top-full w-60 bg-white shadow-2xl rounded-b-xl overflow-hidden hidden group-hover:block z-50 animate-in fade-in slide-in-from-top-2 duration-200 border-t-2 border-teal-600">
                   {item.children.map(child => (
                     <button
                       key={child.id}
                       onClick={() => handleNavClick(item.id, child.id)}
-                      className={`w-full text-left px-4 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors flex items-center gap-3 border-b border-gray-50 last:border-0 ${activeSubTab === child.id ? 'bg-teal-50 text-teal-600' : 'text-gray-600 hover:bg-gray-50'}`}
+                      className={`w-full text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest transition-all flex items-center gap-4 border-b border-gray-50 last:border-0 ${activeSubTab === child.id ? 'bg-teal-50 text-teal-600 pl-7 shadow-inner' : 'text-gray-600 hover:bg-gray-50 hover:pl-6'}`}
                     >
                       {/* @ts-ignore */}
-                      {React.createElement(Icons[child.icon] || Icons.ChevronRight, { size: 14 })}
+                      {React.createElement(Icons[child.icon] || Icons.ChevronRight, { size: 14, className: activeSubTab === child.id ? 'text-teal-600' : 'text-gray-400' })}
                       {child.label}
                     </button>
                   ))}
@@ -352,23 +328,36 @@ const App: React.FC = () => {
             </div>
           ))}
           
-          <button className="flex flex-col items-center justify-center px-5 h-full text-white transition-all hover:bg-black/10 min-w-[110px]">
-            <Icons.Map size={22} className="mb-1" />
+          <button className="flex flex-col items-center justify-center px-6 h-full text-white transition-all hover:bg-black/10 min-w-[120px]">
+            <Icons.Map size={24} className="mb-1" />
             <div className="flex items-center gap-1">
-              <span className="text-[10.5px] font-black uppercase tracking-tight">GPS Tracker</span>
-              <Icons.ChevronDown size={10} />
+              <span className="text-[10px] font-black uppercase tracking-tight">GPS Track</span>
+              <Icons.ChevronDown size={10} className="opacity-60" />
             </div>
           </button>
         </div>
       </nav>
 
-      <main className="flex-1 overflow-y-auto bg-[#ecf0f5]">
+      {/* Main Branding Header for Print/Visibility (Optional overlay) */}
+      <div className="bg-white px-8 py-2 border-b border-gray-200 hidden md:block no-print">
+         <div className="flex justify-between items-center text-[10px] font-black uppercase text-gray-400 tracking-[0.2em]">
+            <span>Gazipura Branch</span>
+            <span>Technical Operations Terminal v2.5</span>
+            <span className="text-teal-600">Secure Protocol: Active</span>
+         </div>
+      </div>
+
+      <main className="flex-1 overflow-y-auto bg-[#ecf0f5] scroll-smooth">
         {renderContent()}
       </main>
 
-      <footer className="bg-white border-t border-gray-200 py-3 px-6 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex justify-between shrink-0">
-        <div>M/S Al-Amin Enterprise</div>
-        <div>All rights reserved © 2017-2018</div>
+      <footer className="bg-white border-t border-gray-200 py-3 px-8 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex justify-between shrink-0 no-print">
+        <div className="flex items-center gap-4">
+          <span className="text-blue-900 font-black">M/S Al-Amin Enterprise</span>
+          <span className="h-3 w-px bg-gray-200"></span>
+          <span>Official ERP Solution</span>
+        </div>
+        <div>All rights reserved © 2017-2024 Gangchill Group</div>
       </footer>
     </div>
   );

@@ -22,28 +22,25 @@ export const getErpInsights = async (module: string, data: any) => {
 };
 
 /**
- * Requirement: 1st character/word dropdown search.
- * Filters products from the local registry based on prefix matching.
+ * Enhanced Search Logic
+ * Priority 1: Prefix matching (1st letter logic)
+ * Priority 2: SKU prefix matching
  */
 export const searchPartsByFirstWord = (term: string, products: Product[]): Product[] => {
   if (!term || term.trim() === '') return [];
-  const lowerTerm = term.toLowerCase();
+  const lowerTerm = term.toLowerCase().trim();
   
   return products.filter(p => {
     const nameLower = p.name.toLowerCase();
     const skuLower = p.sku.toLowerCase();
     
-    // Priority 1: Name starts with the term (1st character typed logic)
-    const matchesNamePrefix = nameLower.startsWith(lowerTerm);
+    // Check if whole name starts with term OR any word in the name starts with the term
+    const nameStarts = nameLower.startsWith(lowerTerm);
+    const wordStarts = nameLower.split(' ').some(word => word.startsWith(lowerTerm));
+    const skuStarts = skuLower.startsWith(lowerTerm);
     
-    // Priority 2: SKU starts with the term
-    const matchesSkuPrefix = skuLower.startsWith(lowerTerm);
-    
-    // Priority 3: Any word in the name starts with the term
-    const matchesWordPrefix = nameLower.split(' ').some(word => word.startsWith(lowerTerm));
-    
-    return matchesNamePrefix || matchesSkuPrefix || matchesWordPrefix;
-  }).slice(0, 15);
+    return nameStarts || wordStarts || skuStarts;
+  }).slice(0, 15); // Return top 15 results for performance
 };
 
 export const generateJobCardDescription = async (complaints: string) => {
