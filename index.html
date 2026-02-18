@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +20,7 @@
     .brand-ragtime {
       font-family: 'Inter', sans-serif;
       font-weight: 900;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.02em;
     }
     
     .brand-articpro {
@@ -39,9 +38,8 @@
     /* Print Optimizations */
     @media print {
       .no-print { display: none !important; }
-      body { background: white !important; }
-      @page { size: auto; margin: 5mm; }
-      .no-print-border { border-bottom: 2px solid black !important; }
+      body { background: white !important; -webkit-print-color-adjust: exact; }
+      @page { size: A4; margin: 0; }
     }
 
     /* Form Visibility Fixes */
@@ -66,7 +64,7 @@
 </head>
 <body class="text-gray-900">
   <div id="root"></div>
-  <!-- Primary entry point for the application -->
-  <script type="module" src="./index.tsx"></script>
+  <!-- Primary entry point renamed to main.tsx for Vercel/Vite standard compatibility -->
+  <script type="module" src="./main.tsx"></script>
 </body>
 </html>
