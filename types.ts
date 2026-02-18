@@ -128,6 +128,8 @@ export interface TemplateConfig {
   fieldMappings: FieldMapping[];
 }
 
+export type PaperState = boolean | 'cross' | null;
+
 export interface SeizeList {
   id: string;
   date: string;
@@ -141,14 +143,14 @@ export interface SeizeList {
   capacity: string;
   nameOfDepo: string;
   papers: {
-    acknowledgementSlip: boolean;
-    registrationPapers: boolean;
-    taxToken: boolean;
-    routePermit: boolean;
-    insuranceCertificate: boolean;
-    fitness: boolean;
-    caseSlip: boolean;
-    smartCard: boolean;
+    acknowledgementSlip: PaperState;
+    registrationPapers: PaperState;
+    taxToken: PaperState;
+    routePermit: PaperState;
+    insuranceCertificate: PaperState;
+    fitness: PaperState;
+    caseSlip: PaperState;
+    smartCard: PaperState;
   };
   inspectionReport: { [key: string]: string };
   remarks: string;

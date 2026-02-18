@@ -37,12 +37,9 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
 }) => {
   return (
     <div className={`flex justify-between items-center border-b-2 border-black pb-4 mb-4 no-print-border bg-white ${className}`}>
-      {/* Column 1: GANGCHILL GROUP Logo */}
       <div className="w-[30%] flex justify-start items-center">
         <GangchillLogo height={50} />
       </div>
-      
-      {/* Column 2: Al-AMIN Enterprise (Branding) */}
       <div className="w-[40%] text-center flex flex-col items-center">
         <div className="flex items-baseline gap-1">
           <h1 className="brand-ragtime text-4xl text-blue-900 uppercase leading-none select-none">Al-AMIN</h1>
@@ -54,11 +51,27 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
         <p className="text-[7px] font-bold text-gray-500 uppercase tracking-tight mt-2 max-w-xs">{address}</p>
         <p className="text-[7px] font-black text-gray-400 mt-0.5">{contact}</p>
       </div>
-
-      {/* Column 3: T-KING Logo */}
       <div className="w-[30%] flex justify-end items-center">
         <TKingLogo height={60} />
       </div>
     </div>
   );
 };
+
+export const SeizeHeaderBranding: React.FC<{ title: string; address: string; contact: string }> = ({ title, address, contact }) => (
+  <div className="flex justify-between items-center border-b-2 border-black pb-3 mb-2 bg-white">
+    <div className="w-[25%] flex justify-start"><GangchillLogo height={45} /></div>
+    <div className="w-[50%] text-center flex flex-col items-center">
+      <div className="flex items-center gap-2">
+        <h1 className="brand-ragtime text-4xl text-blue-900 uppercase leading-none">Al-AMIN</h1>
+        <h1 className="brand-articpro text-4xl text-gray-700 italic leading-none">Enterprise</h1>
+      </div>
+      <div className="mt-2 px-4 py-0.5 border-2 border-black font-black uppercase tracking-[0.15em] text-[10px] bg-gray-50 print:bg-white">
+        {title}
+      </div>
+      <p className="text-[7px] font-bold text-gray-500 uppercase tracking-tight mt-2">{address}</p>
+      <p className="text-[7px] font-black text-gray-400">{contact}</p>
+    </div>
+    <div className="w-[25%] flex justify-end"><TKingLogo height={55} /></div>
+  </div>
+);
