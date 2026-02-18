@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Icons } from './Icons';
 import { SeizeList, PaperState } from '../types';
@@ -125,11 +124,13 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
     }));
   };
 
+  // Robust Search Logic for Auto-fill
   const handleRegNoChange = (val: string) => {
-    const searchVal = val.toLowerCase().replace(/\s+/g, '');
+    const searchVal = val.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
     const matched = INITIAL_CUSTOMERS.find(c => {
-      const reg = (c.registrationNo || '').toLowerCase().replace(/\s+/g, '');
-      return reg.includes(searchVal) && searchVal.length >= 4;
+      const dbReg = (c.registrationNo || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      return searchVal.length >= 4 && (dbReg.includes(searchVal) || searchVal.includes(dbReg));
     });
 
     if (matched) {
