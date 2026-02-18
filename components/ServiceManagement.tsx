@@ -5,7 +5,7 @@ import { JobCard, JobCardStatus, JobItem, Product, IssuedPart } from '../types';
 import PrintableJobCard from './PrintableJobCard';
 import PrintableJobCardCashMemo from './PrintableJobCardCashMemo';
 import { searchPartsByFirstWord } from '../services/geminiService';
-import { INITIAL_PRODUCTS } from '../constants';
+import { INITIAL_PRODUCTS, INITIAL_CUSTOMERS } from '../constants';
 
 interface ServiceManagementProps {
   activeSubTab?: string;
@@ -53,6 +53,22 @@ const ServiceManagement: React.FC<ServiceManagementProps> = ({ activeSubTab, job
   ]);
 
   const [partEntry, setPartEntry] = useState({ search: '', qty: 1 });
+
+  const handleRegNoChange = (val: string) => {
+    const matched = INITIAL_CUSTOMERS.find(c => c.registrationNo?.toLowerCase() === val.toLowerCase().trim());
+    if (matched) {
+      setNewJC(prev => ({
+        ...prev,
+        regNo: val,
+        customerName: matched.name,
+        address: matched.address,
+        phone: matched.mobile,
+        chassisNo: matched.chassisNo || '',
+      }));
+    } else {
+      setNewJC(prev => ({ ...prev, regNo: val }));
+    }
+  };
 
   const handleSaveNewJC = () => {
     if (!newJC.customerName) {
@@ -163,9 +179,9 @@ const ServiceManagement: React.FC<ServiceManagementProps> = ({ activeSubTab, job
           <div className="space-y-6">
              <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b pb-2">Vehicle & Client Info</h4>
              <div className="grid grid-cols-2 gap-4">
-                <input placeholder="Job Card No" className="col-span-2 bg-gray-50 p-4 rounded-xl font-black uppercase text-sm border border-gray-100" value={newJC.id} onChange={e => setNewJC({...newJC, id: e.target.value})} />
+                <input placeholder="Registration No" className="col-span-2 bg-blue-50 border-blue-200 border p-4 rounded-xl font-black uppercase text-sm" value={newJC.regNo} onChange={e => handleRegNoChange(e.target.value)} />
                 <input placeholder="Customer Name" className="col-span-2 bg-gray-50 p-4 rounded-xl font-bold uppercase text-sm border border-gray-100" value={newJC.customerName} onChange={e => setNewJC({...newJC, customerName: e.target.value})} />
-                <input placeholder="Reg No" className="bg-gray-50 p-4 rounded-xl font-bold uppercase text-sm border border-gray-100" value={newJC.regNo} onChange={e => setNewJC({...newJC, regNo: e.target.value})} />
+                <input placeholder="Phone" className="bg-gray-50 p-4 rounded-xl font-bold uppercase text-sm border border-gray-100" value={newJC.phone} onChange={e => setNewJC({...newJC, phone: e.target.value})} />
                 <select className="bg-gray-50 p-4 rounded-xl font-black uppercase text-xs border border-gray-100" value={newJC.model} onChange={e => setNewJC({...newJC, model: e.target.value})}>
                   {MODELS.map(m => <option key={m} value={m}>{m}</option>)}
                 </select>

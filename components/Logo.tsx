@@ -22,6 +22,12 @@ export const TKingLogo: React.FC<{ height?: number; className?: string }> = ({ h
   </svg>
 );
 
+export const Watermark: React.FC = () => (
+  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] z-[-1]">
+    <TKingLogo height={500} />
+  </div>
+);
+
 interface HeaderBrandingProps {
   title: string;
   address?: string;
@@ -36,48 +42,48 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
   className = ""
 }) => {
   return (
-    <div className={`flex justify-between items-center border-b-2 border-black pb-4 mb-4 no-print-border bg-white ${className}`}>
-      <div className="w-[30%] flex justify-start items-center">
-        <GangchillLogo height={50} />
-      </div>
-      <div className="w-[40%] text-center flex flex-col items-center">
-        <div className="flex items-baseline gap-1">
-          <h1 className="brand-ragtime text-4xl text-blue-900 uppercase leading-none select-none">Al-AMIN</h1>
+    <div className={`flex flex-col border-b border-black pb-2 mb-2 bg-white ${className}`}>
+      <div className="flex items-center gap-4">
+        <GangchillLogo height={40} />
+        <div className="flex items-baseline gap-2">
+          <h1 className="brand-ragtime text-[28px] text-blue-900 uppercase">Al-AMIN</h1>
+          <h1 className="brand-articpro text-[28px] text-gray-700 italic">Enterprise</h1>
         </div>
-        <h2 className="brand-articpro text-xl text-gray-700 italic -mt-1 select-none">Enterprise</h2>
-        <div className="mt-2 px-4 py-0.5 border-2 border-black font-black uppercase tracking-[0.2em] text-[9px] bg-gray-50 shadow-sm print:bg-white">
+        <div className="ml-auto border-2 border-black px-4 py-0.5 font-black uppercase text-[11px] tracking-widest bg-gray-50">
           {title}
         </div>
-        <p className="text-[7px] font-bold text-gray-500 uppercase tracking-tight mt-2 max-w-xs">{address}</p>
-        <p className="text-[7px] font-black text-gray-400 mt-0.5">{contact}</p>
       </div>
-      <div className="w-[30%] flex justify-end items-center">
-        <TKingLogo height={60} />
+      <div className="mt-1">
+        <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tighter leading-none">{address}</p>
+        <p className="text-[8px] font-black text-gray-400 leading-none mt-0.5">{contact}</p>
       </div>
     </div>
   );
 };
 
 export const SeizeHeaderBranding: React.FC<{ title: string; address: string; contact: string }> = ({ title, address, contact }) => (
-  <div className="flex justify-between items-start mb-2 bg-white relative">
-    {/* Corner Logos */}
-    <div className="absolute left-0 top-0"><GangchillLogo height={45} /></div>
-    <div className="absolute right-0 top-0"><TKingLogo height={55} /></div>
+  <div className="flex flex-col border-b border-black pb-2 mb-2 bg-white">
+    <div className="flex items-center gap-4">
+      {/* Top Left Gangchill Logo */}
+      <GangchillLogo height={45} />
+      
+      {/* Parallel Al-AMIN Enterprise Branding */}
+      <div className="flex items-baseline gap-2">
+        <h1 className="brand-ragtime text-[32px] text-blue-900 uppercase">Al-AMIN</h1>
+        <h1 className="brand-articpro text-[32px] text-gray-700 italic">Enterprise</h1>
+      </div>
+
+      {/* Right Aligned Document Title */}
+      <div className="ml-auto flex flex-col items-end">
+        <div className="px-6 py-1 border-2 border-black font-black uppercase tracking-[0.1em] text-[14px] bg-gray-50 shadow-sm print:bg-white leading-none">
+          {title}
+        </div>
+      </div>
+    </div>
     
-    {/* Centered Technical Branding */}
-    <div className="w-full flex flex-col items-center mt-1">
-      <div className="px-6 py-0.5 border-2 border-black font-black uppercase tracking-[0.2em] text-[13px] bg-gray-100 print:bg-white mb-1.5 shadow-sm">
-        {title}
-      </div>
-      <div className="flex items-center gap-1.5 leading-none">
-        <span className="text-[12px] font-black text-gray-900 italic">M/S.</span>
-        <h1 className="brand-ragtime text-[34px] text-blue-900 uppercase">Al-AMIN</h1>
-        <h1 className="brand-articpro text-[34px] text-gray-700 italic">Enterprise</h1>
-      </div>
-      <div className="mt-2 text-center">
-        <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tighter leading-tight">{address}</p>
-        <p className="text-[8px] font-black text-gray-400 leading-tight">{contact}</p>
-      </div>
+    <div className="mt-2 pl-[60px]">
+      <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tighter leading-none">{address}</p>
+      <p className="text-[8px] font-black text-gray-400 leading-none mt-0.5">{contact}</p>
     </div>
   </div>
 );

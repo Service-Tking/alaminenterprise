@@ -128,8 +128,22 @@ export const SAMPLE_VENDORS: Vendor[] = [
 ];
 
 export const INITIAL_CUSTOMERS: Customer[] = [
-  { id: 'CUS-0947', name: 'Mohammad Rakibul Islam', address: 'Dhaka, Bangladesh', mobile: '01700-000000', email: 'rakibul@example.com' },
-  { id: 'CUS-0948', name: 'TORAF ALI', address: 'Gazipur, Bangladesh', mobile: '01900-000000', email: 'toraf@example.com' },
+  { id: 'CUS-Z-00003803', name: 'Md. Mhafuzur Rahman', address: 'V# Boro Rangamatia, PO# Jirabo, PS# Savar, D# Dhaka', mobile: '01918360934', email: '', registrationNo: 'Dhaka metro na 13-8941', chassisNo: 'LA71AEB29J0034289', officerName: 'Md. Abdur Rahim' },
+  { id: 'CUS-Z-00003804', name: 'Md Masudur Rahman', address: 'V# Bodhupur, PO# Chatiantola-7470, PS# Bagharpara, D# Jeshore', mobile: '01926884237', email: '', registrationNo: 'Dhaka Metro N-13-7307', chassisNo: 'LA71AJE40H0041552', officerName: 'Md. Ajmal Hossain Chowdhury' },
+  { id: 'CUS-P-00003805', name: 'Md. Shahab Uddin', address: 'V# Vatikandapara, PO# Nandail-2290, PS# Nandail Pouroshova, D# Mymensingh', mobile: '01929842343', email: '', registrationNo: 'Dhaka Metro N-17-1183', chassisNo: 'LA71AEB24G0100286', officerName: 'Sarder Arif-Ur- Rahman' },
+  { id: 'CUS-Z-00003807', name: 'Maa Store, PRo- Md. Monir Hossain', address: 'V# Atrab, PO# Alalpur-1913, PS# Delduar, D# Tangail', mobile: '01607429461', email: '', registrationNo: 'DHAKA METRO NA 19-2346', chassisNo: 'LA71AJC31K0033266', officerName: 'Mahbub Alam Sarowar' },
+  { id: 'CUS-P-00003808', name: 'Mst. Nargis Akter', address: 'V# Pukurpar, TetulTola, PO# Jirani, PS# Ashulia, D# Dhaka', mobile: '01405097878', email: '', registrationNo: 'DHAKA METRO-NA_19-3867', chassisNo: 'LA71AJE45K0100294', officerName: 'Md. Abdur Rahim' },
+  { id: 'CUS-P-00003809', name: 'Mumita Afrin Juthi', address: 'H# Karim Hazir Bari, V# Raypura South , PO# Raypura-1630, PS# Raypura Pouroshova, D# Narshingdi', mobile: '01955655885', email: '', registrationNo: 'Dhaka-Metro N-13-4442', chassisNo: 'LA71AJD22H0103047', officerName: 'Shahin Khan' },
+  { id: 'CUS-2056', name: 'Md. Alam Miah', address: 'Bagalvita, Kartikpur,Modhonagar, Sunamgonj', mobile: '01747711480', email: '', registrationNo: 'Dhaka Metro N-11-9636', chassisNo: 'LA71AJD21F0100220', officerName: 'Md. Nazrul Islam' },
+  { id: 'CUS-P-00003810', name: 'Md. Shibbir Ahmed', address: 'V# South Machimpur,Bajitpur PO# Doara Bazar-3070, PS# DoaraBazar, D# Sunamgonj', mobile: '01719742698', email: '', registrationNo: 'Dhaka Merto Na 19-1807', chassisNo: 'LA71AJC37K0033272', officerName: 'Shahin Khan' },
+  { id: 'CUS-P-00003811', name: 'Shahana Akter', address: 'V# Battery Ghat Stand, PO# Kamrangirchor, PS# Kamrangirchor, D# Dhaka', mobile: '01893760230', email: '', registrationNo: 'DHAKA METRO-NA_21-2970', chassisNo: 'LA71ALF44L0009545', officerName: 'Md. Ibrahim' },
+  { id: 'CUS-P-00003812', name: 'Nur Mohammad', address: 'V# Bashir, PO# Dokkhin Baag-1613, PS# Kaligonj, D# Gazipur.', mobile: '01924920319', email: '', registrationNo: 'DHAKA METRO DA 12-5432', chassisNo: 'LA71ALW59N0001405', officerName: 'Sarder Arif-Ur- Rahman' },
+  { id: 'CUS-Z-00003813', name: 'Mst. Mahmuda', address: 'V# Islampur, PO# Kodda Bazar, PS# Basan, D# Gazipur', mobile: '01977019329', email: '', registrationNo: 'DHAKA METRO NA 19-6074', chassisNo: 'LA71AJC34L0040584', officerName: 'Sarder Arif-Ur- Rahman' },
+  { id: 'CUS-Z-00003817', name: 'Md. Imran Hossain', address: 'V# Songacha, PO# Khamar Para-7610, PS# Sreepur, D# Magura', mobile: '01987250454', email: '', registrationNo: 'KHULNA METRO-NA_11-1934', chassisNo: 'LA71ALF49L0007337', officerName: 'Md. Ajmal Hossain Chowdhury' },
+  { id: 'CUS-Z-00003818', name: 'Mst. Rabeya Khatun', address: 'H# 0, V# Baliadanga, PO# Alokdia-7600, PS# Magura Sadar, D# Magura.', mobile: '01937406279', email: '', registrationNo: 'Dhaka metro na 13-8666', chassisNo: 'LA71AJE4XJ0030256', officerName: 'Md. Ajmal Hossain Chowdhury' },
+  { id: 'CUS-P-00003819', name: 'Md. Yunus Ali', address: 'V# Kashipur, PO# Fatulla, PS# Fatulla, D# Narayangonj', mobile: '01794978720', email: '', registrationNo: 'DHAKA METRO NA 13-2593', chassisNo: 'LA71AJD2XG0100315', officerName: 'Md. Ibrahim' },
+  { id: 'CUS-P-00003820', name: 'Md. Jahangir Alam', address: 'V# Kamarpara, PO# Dhaka-1230, PS# Turag, D# Dhaka', mobile: '01973092603', email: '', registrationNo: 'DHAKA METRO NA-21-7858', chassisNo: 'LA71ALF48N0001385', officerName: 'Md. Ibrahim' },
+  { id: 'CUS-P-00003821', name: 'Md Hafizur Rahman', address: 'V# Faridpur, telihaati, PO# Gazipur, PS# Sreepur, D# Gazipur', mobile: '01328777472', email: '', registrationNo: 'Dhaka Merto Na 19-1278', chassisNo: 'LA71AJC34K0032127', officerName: 'Sarder Arif-Ur- Rahman' },
 ];
 
 export const INITIAL_MECHANICS: Mechanic[] = [

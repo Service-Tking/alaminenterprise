@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { JobCard } from '../types';
-import { HeaderBranding } from './Logo';
+import { HeaderBranding, Watermark } from './Logo';
 import { Icons } from './Icons';
 
 interface PrintableJobCardProps {
@@ -11,7 +11,7 @@ interface PrintableJobCardProps {
 
 const PrintableJobCard: React.FC<PrintableJobCardProps> = ({ data, onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-[200] p-4 overflow-y-auto no-print">
+    <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-[200] p-4 overflow-y-auto no-print backdrop-blur-md">
       <div className="w-full max-w-4xl mb-4 flex justify-between items-center text-white no-print">
         <h3 className="text-xl font-bold flex items-center gap-2">
           <Icons.Printer size={20} /> Job Card Preview
@@ -22,10 +22,12 @@ const PrintableJobCard: React.FC<PrintableJobCardProps> = ({ data, onClose }) =>
         </div>
       </div>
 
-      <div className="bg-white w-[210mm] min-h-[297mm] p-[10mm] text-black shadow-2xl print:shadow-none print:m-0 print:w-full font-serif border-8 border-double border-gray-100">
+      <div className="bg-white w-[210mm] min-h-[297mm] p-[10mm] text-black shadow-2xl print:shadow-none print:m-0 print:w-full font-serif border relative overflow-hidden">
+        <Watermark />
         <HeaderBranding title="JOB CARD" />
+        
         {/* Info Grid */}
-        <div className="grid grid-cols-12 gap-0 border-2 border-black text-[11px] mb-6">
+        <div className="grid grid-cols-12 gap-0 border-2 border-black text-[11px] mb-6 relative z-10 bg-white/80">
           <div className="col-span-7 border-r-2 border-black p-4 space-y-4">
              <div className="flex"><span className="w-32 font-black uppercase">Customer Name:</span> <span className="flex-1 border-b border-black font-black uppercase text-blue-900 text-sm">{data.customerName || '..........................................................'}</span></div>
              <div className="flex"><span className="w-32 font-black uppercase">Address:</span> <span className="flex-1 border-b border-black">{data.address || '..........................................................'}</span></div>
@@ -67,8 +69,9 @@ const PrintableJobCard: React.FC<PrintableJobCardProps> = ({ data, onClose }) =>
              </div>
           </div>
         </div>
+        
         {/* Job Details Table */}
-        <table className="w-full border-2 border-black text-[11px] mb-6">
+        <table className="w-full border-2 border-black text-[11px] mb-6 relative z-10 bg-white/80">
           <thead>
             <tr className="bg-gray-100 uppercase font-black text-center h-10">
               <th className="border-r-2 border-b-2 border-black w-12">SL</th>
@@ -97,18 +100,21 @@ const PrintableJobCard: React.FC<PrintableJobCardProps> = ({ data, onClose }) =>
             </tr>
           </tfoot>
         </table>
-        <div className="border-2 border-black p-3 mb-6 text-[10px] bg-gray-50">
+        
+        <div className="border-2 border-black p-3 mb-6 text-[10px] bg-gray-50/90 relative z-10">
           <span className="font-black uppercase block mb-1 underline text-blue-900">Authorization:</span>
           <p className="text-justify leading-tight text-gray-800 italic">
             I hereby authorised the above mention work on my vehicles as per the schedule rate and agree to pay all charges.
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-10 mt-12 mb-12 text-[10px] font-black text-center uppercase">
+        
+        <div className="grid grid-cols-3 gap-10 mt-12 mb-12 text-[10px] font-black text-center uppercase relative z-10">
            <div className="border-t-2 border-black pt-2">Service Advisor</div>
            <div className="border-t-2 border-black pt-2">Store Dept</div>
            <div className="border-t-2 border-black pt-2">Customer</div>
         </div>
-        <div className="border-t pt-4 text-center opacity-30 text-[8px] font-bold uppercase tracking-[0.4em]">
+        
+        <div className="border-t pt-4 text-center opacity-30 text-[8px] font-bold uppercase tracking-[0.4em] relative z-10">
            AL-AMIN ENTERPRISE ERP • JOB CARD LOG
         </div>
       </div>

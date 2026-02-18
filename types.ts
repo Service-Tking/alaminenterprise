@@ -36,6 +36,7 @@ export interface Customer {
   email: string;
   registrationNo?: string;
   chassisNo?: string;
+  officerName?: string;
 }
 
 export interface Supplier {
