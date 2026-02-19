@@ -21,23 +21,32 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
     assigner: { name: '', mobile: '' }, officers: { name: '', mobile: '' }, depoSignatory: { name: 'Md. Eaqub Ali', mobile: '01678-819779' },
   });
 
-  // AUTO-FILL LOGIC
+  // AUTO-FILL ENGINE: Extracted from Customer Database
   useEffect(() => {
     const q = form.registrationNo?.trim().toUpperCase();
     if (q && q.length >= 4) {
       const c = INITIAL_CUSTOMERS.find(x => x.registrationNo?.toUpperCase().includes(q));
       if (c) {
-        setForm(p => ({ ...p, customerIdNo: c.id, customerName: c.name, address: c.address, mobile: c.mobile, chassisNo: c.chassisNo || p.chassisNo }));
+        setForm(p => ({ 
+          ...p, 
+          customerIdNo: c.id, 
+          customerName: c.name, 
+          address: c.address, 
+          mobile: c.mobile, 
+          chassisNo: c.chassisNo || p.chassisNo,
+          officerName: c.officerName || p.officerName
+        }));
       }
     }
   }, [form.registrationNo]);
 
   const handleSubmit = () => {
     setIsSubmitting(true);
+    // Performance Patch: Yield to UI thread to show loading state before heavy commit
     setTimeout(() => {
       onSave(form);
       setIsSubmitting(false);
-    }, 600);
+    }, 250);
   };
 
   return (
@@ -54,19 +63,23 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
 
           <div className="border border-black bg-gray-50/50">
              <div className="grid grid-cols-2 divide-x divide-black border-b border-black">
-                <div className="p-2"><span className="block text-[9px] font-black text-gray-400">REGISTRATION NO</span><input className="w-full bg-transparent font-black uppercase text-blue-900" value={form.registrationNo} onChange={e => setForm({...form, registrationNo: e.target.value})} /></div>
-                <div className="p-2"><span className="block text-[9px] font-black text-gray-400">CHASSIS NO</span><input className="w-full bg-transparent font-mono text-sm" value={form.chassisNo} onChange={e => setForm({...form, chassisNo: e.target.value})} /></div>
+                <div className="p-2"><span className="block text-[9px] font-black text-gray-400 uppercase tracking-tighter">REGISTRATION NO (Auto-fill)</span><input className="w-full bg-transparent font-black uppercase text-blue-900 outline-none" value={form.registrationNo} onChange={e => setForm({...form, registrationNo: e.target.value})} /></div>
+                <div className="p-2"><span className="block text-[9px] font-black text-gray-400 uppercase tracking-tighter">CHASSIS NO</span><input className="w-full bg-transparent font-mono text-sm outline-none" value={form.chassisNo} onChange={e => setForm({...form, chassisNo: e.target.value})} /></div>
              </div>
-             <div className="p-2 border-b border-black"><span className="block text-[9px] font-black text-gray-400">CUSTOMER NAME</span><input className="w-full bg-transparent font-black uppercase" value={form.customerName} onChange={e => setForm({...form, customerName: e.target.value})} /></div>
-             <div className="p-2"><span className="block text-[9px] font-black text-gray-400">FULL ADDRESS</span><textarea rows={1} className="w-full bg-transparent italic" value={form.address} onChange={e => setForm({...form, address: e.target.value})} /></div>
+             <div className="p-2 border-b border-black"><span className="block text-[9px] font-black text-gray-400 uppercase tracking-tighter">CUSTOMER NAME</span><input className="w-full bg-transparent font-black uppercase outline-none" value={form.customerName} onChange={e => setForm({...form, customerName: e.target.value})} /></div>
+             <div className="p-2 border-b border-black"><span className="block text-[9px] font-black text-gray-400 uppercase tracking-tighter">FULL ADDRESS</span><textarea rows={1} className="w-full bg-transparent italic outline-none" value={form.address} onChange={e => setForm({...form, address: e.target.value})} /></div>
+             <div className="grid grid-cols-2 divide-x divide-black">
+                <div className="p-2"><span className="block text-[9px] font-black text-gray-400 uppercase tracking-tighter">CUSTOMER ID</span><input className="w-full bg-transparent font-black outline-none" value={form.customerIdNo} readOnly /></div>
+                <div className="p-2"><span className="block text-[9px] font-black text-gray-400 uppercase tracking-tighter">MOBILE NO</span><input className="w-full bg-transparent font-bold outline-none" value={form.mobile} onChange={e => setForm({...form, mobile: e.target.value})} /></div>
+             </div>
           </div>
 
-          <p className="text-center text-[10px] font-black text-gray-300 uppercase tracking-[0.5em] py-10">Module A - Inspection Grid RESTORED</p>
+          <p className="text-center text-[10px] font-black text-gray-300 uppercase tracking-[0.5em] py-10">Technical Inspection Registry Protocol v2.0</p>
         </div>
 
         <div className="flex gap-4 pt-6 no-print relative z-20">
-           <button onClick={onCancel} className="flex-1 border-2 border-gray-100 py-4 text-gray-400 font-black uppercase text-xs">Discard</button>
-           <button disabled={isSubmitting} onClick={handleSubmit} className="flex-1 bg-blue-900 text-white py-4 font-black uppercase text-xs shadow-xl active:scale-95 transition-all">
+           <button onClick={onCancel} className="flex-1 border-2 border-gray-100 py-4 text-gray-400 font-black uppercase text-xs hover:bg-gray-50">Discard</button>
+           <button disabled={isSubmitting} onClick={handleSubmit} className="flex-1 bg-blue-900 text-white py-4 font-black uppercase text-xs shadow-xl active:scale-95 transition-all disabled:opacity-50">
              {isSubmitting ? 'Logging Report...' : 'Save Seize Record'}
            </button>
         </div>

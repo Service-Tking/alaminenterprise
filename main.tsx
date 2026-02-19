@@ -1,3 +1,4 @@
+
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -6,8 +7,8 @@ import App from './App';
 interface GEBProps { children?: ReactNode; }
 interface GEBState { hasError: boolean; error?: Error; }
 
-// Fix: Extending Component directly to resolve 'this.props' and 'this.state' errors in TypeScript.
-class GlobalErrorBoundary extends Component<GEBProps, GEBState> {
+// Fix: Explicitly using React.Component to ensure props and state are correctly inherited in TypeScript and fix 'Property props does not exist' error.
+class GlobalErrorBoundary extends React.Component<GEBProps, GEBState> {
   public state: GEBState = { hasError: false };
 
   constructor(props: GEBProps) {

@@ -16,16 +16,16 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({ products, onU
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    // INP Fix: Unblocking the UI thread
+    // INP Fix: Yield to main thread before heavy data mapping to keep UI responsive
     setTimeout(() => {
-      const refreshed = [...products];
+      const refreshed = [...(products || [])];
       onUpdateProducts(refreshed);
       setIsRefreshing(false);
-    }, 600);
+    }, 150);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       <div className="flex justify-between items-center bg-white p-6 border rounded-sm shadow-sm">
         <div>
           <h2 className="text-2xl font-black text-gray-800 uppercase tracking-tighter">Stock Inventory Ledger</h2>
@@ -34,14 +34,14 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({ products, onU
         <button 
           disabled={isRefreshing}
           onClick={handleRefresh} 
-          className="bg-[#17a2b8] text-white px-8 py-3 rounded-sm font-black uppercase text-[10px] flex items-center gap-2 shadow-lg disabled:opacity-50"
+          className="bg-[#17a2b8] text-white px-8 py-3 rounded-sm font-black uppercase text-[10px] flex items-center gap-2 shadow-lg disabled:opacity-50 transition-all active:scale-95"
         >
           <Icons.RefreshCw size={14} className={isRefreshing ? 'animate-spin' : ''} />
           {isRefreshing ? 'Refreshing Ledger...' : 'Sync Stock'}
         </button>
       </div>
 
-      <div className="bg-white border rounded-sm overflow-hidden">
+      <div className="bg-white border rounded-sm overflow-hidden shadow-sm">
         <table className="w-full formal-table">
           <thead>
             <tr>
@@ -54,7 +54,7 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({ products, onU
           </thead>
           <tbody>
             {(products || []).map(p => (
-              <tr key={p.id}>
+              <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
                 <td className="font-mono font-black text-teal-700">{p.sku}</td>
                 <td className="font-black uppercase text-gray-700">{p.name}</td>
                 <td className="text-center font-bold text-gray-400">{p.unit}</td>
