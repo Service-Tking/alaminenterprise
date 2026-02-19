@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Icons } from './Icons';
 import { Product, PurchaseOrder, POItem } from '../types';
@@ -16,14 +15,13 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
   activeSubTab, 
   purchaseOrders, 
   onUpdatePurchaseOrders,
-  products,
+  products = [],
   onUpdateProducts
 }) => {
   const [activeTab, setActiveTab] = useState<'grn' | 'view' | 'reports'>('view');
   const [approvingPO, setApprovingPO] = useState<PurchaseOrder | null>(null);
 
   useEffect(() => {
-    // Standardizing navigation ID handling
     if (activeSubTab === 'grn' || activeSubTab === 'inventory-grn') {
       setActiveTab('grn');
     } else if (activeSubTab === 'view' || activeSubTab === 'inventory-view') {
@@ -36,41 +34,34 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
   const handleApproveGRN = () => {
     if (!approvingPO) return;
 
-    // 1. Update Inventory Stock Levels
-    const updatedProducts = [...products];
+    const updatedProducts = [...(products || [])];
     
     approvingPO.items.forEach(poItem => {
       const existingProductIdx = updatedProducts.findIndex(p => p.sku === poItem.sku);
       if (existingProductIdx !== -1) {
-        // Increment existing stock
         updatedProducts[existingProductIdx] = {
           ...updatedProducts[existingProductIdx],
-          stock: updatedProducts[existingProductIdx].stock + poItem.quantity
+          stock: (updatedProducts[existingProductIdx].stock || 0) + poItem.quantity
         };
       } else {
-        // Create new SKU entry in ledger if it doesn't exist
         updatedProducts.push({
           id: `PRD-${Date.now()}-${poItem.sku}`,
           name: poItem.description,
           sku: poItem.sku,
           category: 'Purchased Items',
           stock: poItem.quantity,
-          price: poItem.price * 1.25 // Standard markup estimation
+          price: poItem.price * 1.25
         });
       }
     });
 
     onUpdateProducts(updatedProducts);
 
-    // 2. Update PO Status to 'Received'
     const updatedPOs = purchaseOrders.map(po => 
       po.id === approvingPO.id ? { ...po, status: 'Received' as const } : po
     );
     onUpdatePurchaseOrders(updatedPOs);
-
-    // 3. Reset local state
     setApprovingPO(null);
-    alert(`Success: GRN Approved for PO ${approvingPO.id}. Stock ledger updated.`);
   };
 
   const renderStockView = () => (
@@ -81,7 +72,12 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
           <p className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mt-1">Live Inventory Valuation</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => window.location.reload()} className="flex items-center gap-2 bg-teal-600 text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-teal-600/20 active:scale-95 transition-all"><Icons.RefreshCw size={16}/> Refresh Ledger</button>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="flex items-center gap-2 bg-teal-600 text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-teal-600/20 active:scale-95 transition-all"
+          >
+            <Icons.RefreshCw size={16}/> Refresh Ledger
+          </button>
         </div>
       </div>
       <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
@@ -95,18 +91,18 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {products.length === 0 ? (
+            {(!products || products.length === 0) ? (
               <tr><td colSpan={4} className="p-20 text-center text-gray-300 font-black uppercase tracking-widest text-xs">Inventory empty. Approve POs to fill.</td></tr>
             ) : products.map(p => (
               <tr key={p.id} className="hover:bg-teal-50/30 transition-colors">
                 <td className="px-6 py-4 font-mono text-sm font-black text-teal-700">{p.sku}</td>
                 <td className="px-6 py-4 text-sm font-black text-gray-800 uppercase">{p.name}</td>
                 <td className="px-6 py-4 text-sm text-center">
-                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase border ${p.stock < 10 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
-                    {p.stock} Units
+                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase border ${(p.stock || 0) < 10 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
+                    {p.stock || 0} Units
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm font-black text-right text-gray-900">৳ {(p.price * p.stock).toLocaleString()}</td>
+                <td className="px-6 py-4 text-sm font-black text-right text-gray-900">৳ {((p.price || 0) * (p.stock || 0)).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
@@ -116,7 +112,7 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
   );
 
   const renderGRNList = () => {
-    const pendingPOs = purchaseOrders.filter(po => po.status === 'Pending');
+    const pendingPOs = (purchaseOrders || []).filter(po => po.status === 'Pending');
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
@@ -131,7 +127,6 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
             <div className="bg-white p-24 rounded-[4rem] text-center border-2 border-dashed border-gray-100 flex flex-col items-center">
               <Icons.Download size={48} className="text-gray-100 mb-4" />
               <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">No pending purchase orders for receive</p>
-              <p className="text-gray-300 text-[9px] mt-2 uppercase font-bold">Go to Procurement to create new orders</p>
             </div>
           ) : (
             pendingPOs.map(po => (
@@ -143,8 +138,8 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
                   </div>
                   <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tight group-hover:text-green-600 transition-colors">{po.vendorName}</h3>
                   <div className="flex gap-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                    <span>Items: {po.items.length}</span>
-                    <span className="text-teal-600">Total: ৳ {po.total.toLocaleString()}</span>
+                    <span>Items: {po.items?.length || 0}</span>
+                    <span className="text-teal-600">Total: ৳ {(po.total || 0).toLocaleString()}</span>
                   </div>
                 </div>
                 
@@ -168,19 +163,9 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
                   </div>
                   <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Confirm Stock Receipt</h3>
                   <p className="text-sm font-bold text-gray-500 leading-relaxed px-10">
-                    Confirm approval for PO <span className="font-black text-blue-900">{approvingPO.id}</span>. This will increase stock for {approvingPO.items.length} items.
+                    Confirm approval for PO <span className="font-black text-blue-900">{approvingPO.id}</span>.
                   </p>
                 </div>
-
-                <div className="bg-gray-50 rounded-[2.5rem] p-8 border border-gray-100 space-y-3">
-                   {approvingPO.items.map((item, idx) => (
-                     <div key={idx} className="flex justify-between items-center text-[11px] font-black uppercase border-b border-gray-200 last:border-0 pb-2 mb-2">
-                        <span className="text-gray-500">{item.description}</span>
-                        <span className="text-green-600">+{item.quantity} {item.unit}</span>
-                     </div>
-                   ))}
-                </div>
-
                 <div className="flex gap-4">
                   <button onClick={() => setApprovingPO(null)} className="flex-1 py-6 rounded-[2rem] text-gray-500 font-black uppercase text-[11px] tracking-widest hover:bg-gray-100 transition-all">Cancel</button>
                   <button onClick={handleApproveGRN} className="flex-1 bg-green-600 text-white py-6 rounded-[2rem] font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-green-600/40 active:scale-95 transition-all">Confirm Approval</button>

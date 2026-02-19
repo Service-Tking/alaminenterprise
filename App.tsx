@@ -23,8 +23,9 @@ import { GangchillLogo } from './components/Logo';
 // Error Boundary Implementation
 interface Props { children: ReactNode; }
 interface State { hasError: boolean; }
-// Fixed: Explicitly extend React.Component to resolve 'props' visibility issue in TypeScript
-class ErrorBoundary extends React.Component<Props, State> {
+
+// Fixed: Using the imported Component class to ensure props and state are correctly typed and visible
+class ErrorBoundary extends Component<Props, State> {
   public state: State = { hasError: false };
   public static getDerivedStateFromError(_: Error): State { return { hasError: true }; }
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) { console.error("Uncaught error:", error, errorInfo); }
@@ -41,7 +42,7 @@ class ErrorBoundary extends React.Component<Props, State> {
         </div>
       );
     }
-    // Fixed: Accessed via this.props to ensure correctly typed children are returned
+    // Fixed: Accessed via this.props to return children
     return this.props.children;
   }
 }

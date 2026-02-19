@@ -100,12 +100,12 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
     depoSignatory: { name: 'Md. Eaqub Ali', mobile: '01678-819779' },
   });
 
-  // AUTO-FILL LOGIC: Listen for registration number typing
+  // AUTO-FILL FEATURE
   useEffect(() => {
-    const reg = formData.registrationNo.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-    if (reg.length >= 4) {
+    const searchVal = formData.registrationNo.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (searchVal.length >= 4) {
       const match = INITIAL_CUSTOMERS.find(c => 
-        c.registrationNo?.toLowerCase().replace(/[^a-z0-9]/g, '').includes(reg)
+        c.registrationNo?.toLowerCase().replace(/[^a-z0-9]/g, '').includes(searchVal)
       );
       if (match) {
         setFormData(prev => ({
@@ -124,9 +124,9 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
   const handlePaperToggle = (paperKey: keyof typeof formData.papers) => {
     const current = formData.papers[paperKey];
     let next: PaperState = null;
-    if (current === null) next = true; // Tick
-    else if (current === true) next = 'cross'; // Cross
-    else if (current === 'cross') next = null; // Blank
+    if (current === null) next = true; 
+    else if (current === true) next = 'cross'; 
+    else if (current === 'cross') next = null; 
 
     setFormData(prev => ({
       ...prev,
@@ -137,15 +137,10 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
   const handleInspectionSelect = (item: string, option: string) => {
     setFormData(prev => {
       const currentVal = prev.inspectionReport[item];
-      // If user clicks already selected option, deselect it
       const newVal = currentVal === option ? '' : option;
-      
       return {
         ...prev,
-        inspectionReport: { 
-          ...prev.inspectionReport, 
-          [item]: newVal 
-        },
+        inspectionReport: { ...prev.inspectionReport, [item]: newVal },
         condition: item === 'Condition' ? (newVal as any) : prev.condition
       };
     });
@@ -181,7 +176,7 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
 
         <div className="border border-black bg-white/90 overflow-hidden text-[10px] mb-1 shrink-0 relative z-10 shadow-sm">
           <div className="grid grid-cols-2 divide-x divide-black border-b border-black h-7 items-center">
-            <div className="flex items-center px-2 h-full bg-gray-50/50"><span className="w-24 font-black uppercase text-gray-400">Reg No:</span><input className="flex-1 bg-transparent border-none outline-none font-black uppercase text-blue-900" placeholder="Type here to auto-fill..." value={formData.registrationNo} onChange={e => setFormData({...formData, registrationNo: e.target.value})} /></div>
+            <div className="flex items-center px-2 h-full bg-gray-50/50"><span className="w-24 font-black uppercase text-gray-400">Reg No:</span><input className="flex-1 bg-transparent border-none outline-none font-black uppercase text-blue-900" placeholder="Type here..." value={formData.registrationNo} onChange={e => setFormData({...formData, registrationNo: e.target.value})} /></div>
             <div className="flex items-center px-2 h-full"><span className="w-24 font-black uppercase text-gray-400">Cust ID:</span><input className="flex-1 bg-transparent border-none outline-none font-black text-gray-800" value={formData.customerIdNo} onChange={e => setFormData({...formData, customerIdNo: e.target.value})} /></div>
           </div>
           <div className="grid grid-cols-2 divide-x divide-black border-b border-black h-7 items-center">
@@ -199,7 +194,7 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
         </div>
 
         <div className="border border-black p-2 mb-1 bg-white/95 text-[9px] shrink-0 relative z-10 shadow-sm">
-          <h4 className="font-black underline uppercase mb-1 ml-1 text-blue-900">Papers Checklist (Toggle: Blank/Tick/Cross):</h4>
+          <h4 className="font-black underline uppercase mb-1 ml-1 text-blue-900">Papers Checklist:</h4>
           <div className="grid grid-cols-4 gap-y-1 px-2">
             {Object.keys(formData.papers).map((paperKey) => (
               <div key={paperKey} className="flex items-center gap-2 cursor-pointer select-none" onClick={() => handlePaperToggle(paperKey as keyof typeof formData.papers)}>
@@ -215,7 +210,7 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
         </div>
 
         <div className="border border-black overflow-hidden flex-1 bg-white/90 flex flex-col mb-1 min-h-0 relative z-10 shadow-sm">
-          <h3 className="bg-gray-800 text-white p-1 text-center font-black uppercase border-b border-black text-[11px] shrink-0 tracking-widest">Inspection Grid (Technical Specifications)</h3>
+          <h3 className="bg-gray-800 text-white p-1 text-center font-black uppercase border-b border-black text-[11px] shrink-0 tracking-widest">Inspection Grid</h3>
           <div className="flex-1 overflow-hidden">
             <div className="grid grid-cols-2 divide-x divide-black h-full">
               <div className="divide-y divide-black">
@@ -272,7 +267,7 @@ const SeizeReportForm: React.FC<SeizeReportFormProps> = ({ onSave, onCancel }) =
           </div>
           <div className="flex flex-col items-center">
             <p className="border-b border-gray-300 w-full text-center pb-0.5 mb-6 uppercase tracking-widest text-gray-400">Officer Signature</p>
-            <div className="flex items-center gap-1 w-full text-blue-900"><span>Name:</span><input className="flex-1 border-b border-black bg-transparent outline-none font-black text-[9px]" value={formData.officers.name} onChange={e => setFormData({...formData, officers: {...formData.officers, name: e.target.value}})} /></div>
+            <div className="flex items-center gap-1 w-full text-blue-900"><span>Name:</span><input className="flex-1 border-b border-black bg-transparent outline-none font-black text-[9px]" value={formData.officerName} onChange={e => setFormData({...formData, officerName: e.target.value})} /></div>
           </div>
           <div className="flex flex-col items-center">
             <p className="border-b border-gray-300 w-full text-center pb-0.5 mb-1 uppercase tracking-tighter text-[8px] text-gray-400">Authorized Terminal Incharge</p>
