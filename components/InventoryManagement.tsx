@@ -13,21 +13,23 @@ interface InventoryManagementProps {
 
 const InventoryManagement: React.FC<InventoryManagementProps> = ({ 
   activeSubTab, 
-  purchaseOrders, 
+  purchaseOrders = [], 
   onUpdatePurchaseOrders,
   products = [],
   onUpdateProducts
 }) => {
-  const [activeTab, setActiveTab] = useState<'grn' | 'view' | 'reports'>('view');
+  const [activeTab, setActiveTab] = useState<'grn' | 'view' | 'reports' | 'do'>('view');
   const [approvingPO, setApprovingPO] = useState<PurchaseOrder | null>(null);
 
   useEffect(() => {
-    if (activeSubTab === 'grn' || activeSubTab === 'inventory-grn') {
+    if (activeSubTab?.includes('grn')) {
       setActiveTab('grn');
-    } else if (activeSubTab === 'view' || activeSubTab === 'inventory-view') {
+    } else if (activeSubTab?.includes('view')) {
       setActiveTab('view');
-    } else if (activeSubTab === 'reports' || activeSubTab === 'inventory-reports') {
+    } else if (activeSubTab?.includes('reports')) {
       setActiveTab('reports');
+    } else if (activeSubTab?.includes('do')) {
+      setActiveTab('do');
     }
   }, [activeSubTab]);
 
@@ -93,16 +95,16 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
           <tbody className="divide-y divide-gray-50">
             {(!products || products.length === 0) ? (
               <tr><td colSpan={4} className="p-20 text-center text-gray-300 font-black uppercase tracking-widest text-xs">Inventory empty. Approve POs to fill.</td></tr>
-            ) : products.map(p => (
-              <tr key={p.id} className="hover:bg-teal-50/30 transition-colors">
-                <td className="px-6 py-4 font-mono text-sm font-black text-teal-700">{p.sku}</td>
-                <td className="px-6 py-4 text-sm font-black text-gray-800 uppercase">{p.name}</td>
+            ) : products?.map(p => (
+              <tr key={p?.id || Math.random()} className="hover:bg-teal-50/30 transition-colors">
+                <td className="px-6 py-4 font-mono text-sm font-black text-teal-700">{p?.sku || '---'}</td>
+                <td className="px-6 py-4 text-sm font-black text-gray-800 uppercase">{p?.name || 'Unknown Item'}</td>
                 <td className="px-6 py-4 text-sm text-center">
-                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase border ${(p.stock || 0) < 10 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
-                    {p.stock || 0} Units
+                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase border ${(p?.stock || 0) < 10 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
+                    {p?.stock || 0} Units
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm font-black text-right text-gray-900">৳ {((p.price || 0) * (p.stock || 0)).toLocaleString()}</td>
+                <td className="px-6 py-4 text-sm font-black text-right text-gray-900">৳ {((p?.price || 0) * (p?.stock || 0)).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
@@ -112,7 +114,7 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
   );
 
   const renderGRNList = () => {
-    const pendingPOs = (purchaseOrders || []).filter(po => po.status === 'Pending');
+    const pendingPOs = (purchaseOrders || []).filter(po => po?.status === 'Pending');
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
@@ -182,7 +184,7 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
       {activeTab === 'view' ? renderStockView() : activeTab === 'grn' ? renderGRNList() : (
         <div className="bg-white p-24 rounded-[4rem] text-center border-2 border-dashed border-gray-100">
            <Icons.BarChart3 size={48} className="mx-auto text-gray-100 mb-4" />
-           <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Analytics Module Pending</p>
+           <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Module View Pending</p>
         </div>
       )}
     </div>

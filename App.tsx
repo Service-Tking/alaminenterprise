@@ -21,13 +21,13 @@ import EstimateManagement from './components/EstimateManagement';
 import { GangchillLogo } from './components/Logo';
 
 // Error Boundary Implementation
-interface Props { children: ReactNode; }
-interface State { hasError: boolean; }
+interface EBProps { children: ReactNode; }
+interface EBState { hasError: boolean; }
 
-// Fixed: Using the imported Component class to ensure props and state are correctly typed and visible
-class ErrorBoundary extends Component<Props, State> {
-  public state: State = { hasError: false };
-  public static getDerivedStateFromError(_: Error): State { return { hasError: true }; }
+// Fixed: Explicitly using React.Component with unique interface names to resolve 'props' type resolution issues in some TypeScript environments
+class ErrorBoundary extends React.Component<EBProps, EBState> {
+  public state: EBState = { hasError: false };
+  public static getDerivedStateFromError(_: Error): EBState { return { hasError: true }; }
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) { console.error("Uncaught error:", error, errorInfo); }
   public render() {
     if (this.state.hasError) {
@@ -42,7 +42,7 @@ class ErrorBoundary extends Component<Props, State> {
         </div>
       );
     }
-    // Fixed: Accessed via this.props to return children
+    // Fixed: Correctly typed children access via this.props through explicit interface generic
     return this.props.children;
   }
 }
