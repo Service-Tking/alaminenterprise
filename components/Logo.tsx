@@ -44,11 +44,12 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
   return (
     <div className={`flex flex-col border-b-2 border-black pb-2 mb-2 bg-white ${className}`}>
       <div className="flex items-start gap-4">
-        <div className="flex flex-col items-start">
-          <GangchillLogo height={35} />
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <h1 className="brand-ragtime text-[24px] text-blue-900 uppercase leading-none">Al-AMIN</h1>
-            <h1 className="brand-articpro text-[24px] text-gray-700 italic leading-none">Enterprise</h1>
+        {/* Left Aligned Branding Layout */}
+        <div className="flex items-center gap-4">
+          <GangchillLogo height={45} />
+          <div className="flex items-baseline gap-1.5">
+            <h1 className="brand-ragtime text-[26px] text-blue-900 uppercase leading-none">Al-AMIN</h1>
+            <h1 className="brand-articpro text-[26px] text-gray-700 italic leading-none">Enterprise</h1>
           </div>
         </div>
         <div className="ml-auto flex flex-col items-end">
@@ -68,11 +69,12 @@ export const HeaderBranding: React.FC<HeaderBrandingProps> = ({
 export const SeizeHeaderBranding: React.FC<{ title: string; address: string; contact: string }> = ({ title, address, contact }) => (
   <div className="flex flex-col border-b-2 border-black pb-2 mb-2 bg-white">
     <div className="flex items-start gap-4">
-      <div className="flex flex-col items-start">
-        <GangchillLogo height={40} />
-        <div className="flex items-baseline gap-2 mt-1">
-          <h1 className="brand-ragtime text-[28px] text-blue-900 uppercase leading-none">Al-AMIN</h1>
-          <h1 className="brand-articpro text-[28px] text-gray-700 italic leading-none">Enterprise</h1>
+      {/* Left Aligned Branding Layout */}
+      <div className="flex items-center gap-4">
+        <GangchillLogo height={50} />
+        <div className="flex items-baseline gap-2">
+          <h1 className="brand-ragtime text-[30px] text-blue-900 uppercase leading-none">Al-AMIN</h1>
+          <h1 className="brand-articpro text-[30px] text-gray-700 italic leading-none">Enterprise</h1>
         </div>
       </div>
 

@@ -1,3 +1,4 @@
+
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -6,7 +7,8 @@ import App from './App';
 interface Props { children: ReactNode; }
 interface State { hasError: boolean; error?: Error; }
 
-class GlobalErrorBoundary extends Component<Props, State> {
+// Fixed: Explicitly extend React.Component to resolve 'props' visibility issue in TypeScript
+class GlobalErrorBoundary extends React.Component<Props, State> {
   public state: State = { hasError: false };
 
   public static getDerivedStateFromError(error: Error): State {
@@ -53,6 +55,7 @@ class GlobalErrorBoundary extends Component<Props, State> {
         </div>
       );
     }
+    // Fixed: Accessed via this.props to ensure correctly typed children are returned
     return this.props.children;
   }
 }
