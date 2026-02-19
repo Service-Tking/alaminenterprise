@@ -19,28 +19,23 @@ import ProductManagement from './components/ProductManagement';
 import EstimateManagement from './components/EstimateManagement';
 import { GangchillLogo } from './components/Logo';
 
-interface EBProps { children: ReactNode; }
+interface EBProps { children?: ReactNode; }
 interface EBState { hasError: boolean; }
 
-// Explicitly use Component and constructor to resolve 'props' type resolution issues in some TypeScript environments
+// Fix: Extending Component directly to ensure 'this.props' is recognized by TypeScript
 class ErrorBoundary extends Component<EBProps, EBState> {
-  constructor(props: EBProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
+  public state: EBState = { hasError: false };
+  constructor(props: EBProps) { super(props); }
   public static getDerivedStateFromError(_: Error): EBState { return { hasError: true }; }
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) { console.error("Uncaught error:", error, errorInfo); }
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) { console.error("Critical ERP Error:", error, errorInfo); }
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-8 text-center">
-          <div className="bg-white p-12 rounded-[3rem] shadow-2xl max-w-md space-y-6">
-            <Icons.AlertCircle className="mx-auto text-red-500" size={64} />
-            <h2 className="text-2xl font-black text-gray-900 uppercase">System Recovery</h2>
-            <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">Mobile Interface Error. Please refresh to restore operations.</p>
-            <button onClick={() => window.location.reload()} className="w-full bg-blue-900 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest">Reload Operations</button>
-          </div>
+        <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-8 text-center text-white font-sans">
+          <Icons.AlertCircle size={64} className="text-red-500 mb-6" />
+          <h1 className="text-2xl font-black uppercase mb-2">Interface Recovery Needed</h1>
+          <p className="text-gray-400 text-sm mb-6 uppercase tracking-widest font-bold">System interaction blocked. Restoring safety protocol...</p>
+          <button onClick={() => window.location.reload()} className="bg-blue-600 px-10 py-4 rounded-xl font-black uppercase text-xs tracking-widest shadow-2xl">Restore Operations</button>
         </div>
       );
     }
@@ -49,247 +44,145 @@ class ErrorBoundary extends Component<EBProps, EBState> {
 }
 
 const LoadingSpinner = () => (
-  <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
-    <div className="w-12 h-12 border-4 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
-    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Initializing ERP Module...</p>
+  <div className="flex flex-col items-center justify-center h-[60vh]">
+    <div className="w-10 h-10 border-4 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
+    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mt-4">ERP Synchronizing...</p>
   </div>
 );
-
-const LoginView: React.FC<{ onLogin: (userId: string, pass: string) => void }> = ({ onLogin }) => {
-  const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = () => {
-    if (!userId || !password) {
-      setError('Please enter both User ID and Password');
-      return;
-    }
-    setError('');
-    onLogin(userId, password);
-  };
-
-  return (
-    <div className="min-h-screen bg-[#2d2e32] flex items-center justify-center p-4">
-      <div className="bg-white rounded-[3rem] w-full max-w-md p-12 space-y-10 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-bl-full -z-0"></div>
-        <div className="text-center space-y-4 relative z-10">
-          <div className="flex justify-center">
-            <GangchillLogo height={80} />
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="flex items-baseline gap-1">
-              <h1 className="text-4xl text-blue-900 font-black uppercase tracking-tighter">Al-Amin</h1>
-              <span className="text-2xl text-gray-700 font-medium italic">Enterprise</span>
-            </div>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mt-1">Enterprise ERP v2.5</p>
-          </div>
-        </div>
-
-        <div className="space-y-6 relative z-10">
-          <div className="space-y-4">
-            <div className="relative">
-              <Icons.User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input 
-                type="text" 
-                placeholder="User ID" 
-                className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 pl-12 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-900 transition-all"
-                value={userId}
-                onChange={e => setUserId(e.target.value)}
-              />
-            </div>
-            <div className="relative">
-              <Icons.Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input 
-                type="password" 
-                placeholder="Password" 
-                className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 pl-12 text-sm outline-none focus:ring-2 focus:ring-blue-900 transition-all"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-              />
-            </div>
-            {error && <p className="text-red-500 text-[10px] font-black uppercase text-center">{error}</p>}
-          </div>
-          
-          <button 
-            onClick={handleSubmit}
-            className="w-full bg-blue-900 text-white py-5 rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-blue-900/40 hover:scale-[1.02] active:scale-95 transition-all"
-          >
-            Authenticate Access
-          </button>
-        </div>
-
-        <div className="text-center relative z-10">
-          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-            {COMPANY_DETAILS.groupName} Secure Portal
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const DashboardOverview = ({ role }: { role: UserRole }) => {
-  return (
-    <div className="max-w-7xl mx-auto py-10 px-4 space-y-10 animate-in fade-in duration-500">
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 text-center">
-        <h2 className="text-2xl md:text-4xl font-light text-gray-600">
-          Welcome to <span className="font-bold uppercase">Md. Eaqub Ali</span>
-        </h2>
-      </div>
-
-      <div className="grid lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-8 bg-white border border-gray-200 shadow-sm rounded-sm overflow-hidden">
-          <div className="bg-[#f4f4f4] px-4 py-3 border-b flex items-center gap-2">
-            <Icons.Users size={16} className="text-gray-600" />
-            <h3 className="font-bold text-gray-600 text-sm uppercase">Recent User Logins</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b bg-white">
-                  <th className="px-4 py-3 text-[10px] font-black text-gray-800 uppercase tracking-widest">Full Name</th>
-                  <th className="px-4 py-3 text-[10px] font-black text-gray-800 uppercase tracking-widest">Branch</th>
-                  <th className="px-4 py-3 text-[10px] font-black text-gray-800 uppercase tracking-widest text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                <tr>
-                  <td className="px-4 py-3 text-sm text-gray-600 font-bold">Mohammad Rakibul Islam</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 font-medium">Gazipura</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded uppercase">Online</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        
-        <div className="lg:col-span-4 bg-white border border-gray-200 shadow-sm rounded-sm">
-          <div className="bg-[#f4f4f4] px-4 py-3 border-b flex items-center gap-2">
-            <Icons.CheckCircle2 size={16} className="text-gray-600" />
-            <h3 className="font-bold text-gray-600 text-sm uppercase">System Status</h3>
-          </div>
-          <div className="p-8 text-center space-y-6">
-            <h3 className="text-2xl font-light text-gray-700">Your Gangchill Group ERP is <span className="text-green-600 font-black">ACTIVE</span></h3>
-            <p className="text-xs text-gray-500 leading-relaxed uppercase font-bold tracking-widest">
-              Industry-specific ERP solutions for agile, flexible and tightly integrated operations!
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [activeSubTab, setActiveSubTab] = useState('');
+  const [isNavigating, setIsNavigating] = useState(false);
   
   const [customers, setCustomers] = useState<Customer[]>(INITIAL_CUSTOMERS);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [mechanics, setMechanics] = useState<Mechanic[]>(INITIAL_MECHANICS);
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-
   const [jobCards, setJobCards] = useState<JobCard[]>([]);
   const [estimates, setEstimates] = useState<Estimate[]>([]);
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
   const [templates, setTemplates] = useState<TemplateConfig[]>([]);
 
-  const handleLogin = (id: string, pass: string) => {
-    setUser({
-      id: '1', fullName: 'Md. Eaqub Ali', mobile: '01678819779', email: 'eaqub@alamin-bd.com',
-      role: UserRole.SUPER_ADMIN, branch: 'Gazipura', status: 'Active'
+  const handleLogin = () => {
+    // AUTHENTICATION GUARD: Setting Eaqub as the unique Super Admin
+    setUser({ 
+      id: '1', 
+      fullName: 'Md. Eaqub Ali', 
+      mobile: '01678819779', 
+      email: 'eaqub@alamin-bd.com', 
+      role: UserRole.SUPER_ADMIN, 
+      branch: 'Gazipura', 
+      status: 'Active' 
     });
   };
 
-  if (!user) return <LoginView onLogin={handleLogin} />;
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'master-setup':
-        if (activeSubTab === 'master-setup-customer') return <CustomerManagement customers={customers} onUpdateCustomers={setCustomers} />;
-        if (activeSubTab === 'master-setup-supplier') return <SupplierManagement suppliers={suppliers} onUpdateSuppliers={setSuppliers} />;
-        if (activeSubTab === 'master-setup-mechanic') return <MechanicManagement mechanics={mechanics} onUpdateMechanics={setMechanics} />;
-        if (activeSubTab === 'master-setup-product') return <ProductManagement products={products} onUpdateProducts={setProducts} />;
-        if (activeSubTab === 'master-setup-user-mgmt') return <UserManagement />;
-        if (activeSubTab === 'master-setup-role-perms') return <TemplateSettings onSave={(t) => setTemplates([...templates, t])} existingTemplates={templates} />;
-        return <AboutUs />;
-      case 'accounts':
-        return <AccountsManagement activeSubTab={activeSubTab} />;
-      case 'procurement':
-        return <ProcurementManagement activeSubTab={activeSubTab} purchaseOrders={purchaseOrders} onUpdatePurchaseOrders={setPurchaseOrders} />;
-      case 'sales':
-        if (activeSubTab === 'sales-estimate') return <EstimateManagement estimates={estimates} onUpdateEstimates={setEstimates} products={products} />;
-        return <SalesManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} products={products} />;
-      case 'inventory':
-        return <InventoryManagement templates={templates} activeSubTab={activeSubTab} purchaseOrders={purchaseOrders} onUpdatePurchaseOrders={setPurchaseOrders} products={products} onUpdateProducts={setProducts} />;
-      case 'store':
-        return <StoreManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} />;
-      case 'service':
-        return <ServiceManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} products={products} />;
-      default:
-        return <DashboardOverview role={user.role} />;
-    }
+  const handleLogout = () => {
+    setUser(null);
+    setActiveTab('dashboard');
+    localStorage.clear();
+    sessionStorage.clear();
   };
 
   const handleNavClick = (tabId: string, subTabId?: string) => {
-    setActiveTab(tabId);
-    setActiveSubTab(subTabId || '');
+    setIsNavigating(true);
+    // INP PROTECTION: Yielding to browser main thread to prevent interaction freeze
+    setTimeout(() => {
+      setActiveTab(tabId);
+      setActiveSubTab(subTabId || '');
+      setIsNavigating(false);
+    }, 50);
   };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#2d2e32] flex items-center justify-center p-4">
+        <div className="bg-white rounded-[3rem] w-full max-w-md p-12 space-y-10 shadow-2xl text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-bl-full -z-0"></div>
+          <div className="relative z-10 space-y-6">
+            <GangchillLogo height={80} className="mx-auto" />
+            <div className="flex flex-col items-center">
+              <div className="flex items-baseline gap-1.5">
+                <h1 className="brand-ragtime text-4xl text-blue-900 uppercase">Al-AMIN</h1>
+                <h1 className="brand-articpro text-2xl text-gray-500 italic">Enterprise</h1>
+              </div>
+              <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.5em] mt-2">Secure ERP Access Point</p>
+            </div>
+            <button 
+              onClick={handleLogin} 
+              className="w-full bg-blue-900 text-white py-6 rounded-2xl font-black uppercase text-xs tracking-widest shadow-2xl shadow-blue-900/40 hover:scale-[1.02] active:scale-95 transition-all"
+            >
+              Authorize Terminal
+            </button>
+            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">© 2024 Gangchill Group Logistics</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <ErrorBoundary>
       <div className="flex flex-col min-h-screen font-sans">
-        <header className="h-16 bg-[#222d32] flex items-center justify-between px-4 shrink-0 z-30 shadow-md">
-          <div className="flex items-center gap-4">
-            <GangchillLogo height={32} />
-            <h1 className="text-xl font-black text-white uppercase tracking-tighter hidden md:block">Al-Amin <span className="font-light text-gray-400">Enterprise</span></h1>
+        {/* BRANDING HEADER */}
+        <header className="h-16 bg-[#222d32] flex items-center justify-between px-6 shrink-0 z-30 shadow-md">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
+              <GangchillLogo height={45} />
+              <div className="flex items-baseline gap-2">
+                <h1 className="brand-ragtime text-[26px] text-white uppercase leading-none">Al-AMIN</h1>
+                <h1 className="brand-articpro text-[26px] text-gray-400 italic leading-none">Enterprise</h1>
+              </div>
+            </div>
+            <div className="h-8 w-px bg-gray-700 hidden lg:block"></div>
+            <p className="hidden lg:block text-[10px] font-black text-teal-400 uppercase tracking-[0.2em]">Operational Resource Gateway v2.5</p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-3 pl-4 border-l border-gray-700 cursor-pointer group">
-               <div className="w-8 h-8 bg-[#3c8dbc] rounded-lg flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
-                 <Icons.User size={16} />
-               </div>
-               <div className="hidden lg:block text-left">
-                 <p className="text-[10px] font-black text-white uppercase tracking-tighter leading-none">{user.fullName}</p>
-                 <p className="text-[8px] text-gray-400 font-bold uppercase mt-1 leading-none">{user.role}</p>
-               </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden sm:block">
+              <p className="text-[11px] font-black text-white uppercase leading-none">{user.fullName}</p>
+              <p className="text-[9px] text-gray-500 font-bold uppercase mt-1 tracking-tighter">{user.role}</p>
             </div>
+            <button 
+              onClick={handleLogout}
+              className="w-10 h-10 bg-[#3c8dbc] hover:bg-red-600 rounded-lg flex items-center justify-center text-white shadow-lg transition-colors group"
+              title="Logout System"
+            >
+               <Icons.LogOut size={20} className="group-hover:scale-110 transition-transform" />
+            </button>
           </div>
         </header>
 
-        <nav className="min-h-[70px] bg-[#17a2b8] flex items-center px-2 shrink-0 z-20 shadow-xl overflow-x-auto no-print sticky top-0 scrollbar-hide">
-          <div className="flex items-center h-full min-w-max md:w-full md:justify-center">
+        {/* PRIMARY NAVIGATION BAR */}
+        <nav className="h-[65px] bg-[#17a2b8] flex items-center px-2 shrink-0 z-20 shadow-xl overflow-x-auto no-print sticky top-0 scrollbar-hide">
+          <div className="flex items-center h-full min-w-max">
             <button 
               onClick={() => handleNavClick('dashboard')}
-              className={`flex flex-col items-center justify-center px-4 h-full text-white transition-all hover:bg-black/10 border-r border-teal-400/30 ${activeTab === 'dashboard' ? 'bg-black/20 shadow-inner' : ''}`}
+              className={`flex flex-col items-center justify-center px-8 h-full text-white transition-all hover:bg-black/10 border-r border-teal-400/30 ${activeTab === 'dashboard' ? 'bg-black/20 shadow-inner' : ''}`}
             >
-              <Icons.LayoutDashboard size={20} className="mb-1" />
-              <span className="text-[9px] font-black uppercase tracking-tight">Home</span>
+              <Icons.LayoutDashboard size={20} />
+              <span className="text-[9px] font-black uppercase mt-1">Dashboard</span>
             </button>
 
             {NAVIGATION_ITEMS.map(item => (
               <div key={item.id} className="relative group h-full">
                 <button 
                   onClick={() => handleNavClick(item.id, item.children?.[0]?.id)}
-                  className={`flex flex-col items-center justify-center px-4 h-full text-white transition-all hover:bg-black/10 min-w-[100px] border-r border-teal-400/30 ${activeTab === item.id ? 'bg-black/20 shadow-inner' : ''}`}
+                  className={`flex flex-col items-center justify-center px-8 h-full text-white transition-all hover:bg-black/10 border-r border-teal-400/30 ${activeTab === item.id ? 'bg-black/20 shadow-inner' : ''}`}
                 >
                   {/* @ts-ignore */}
-                  {React.createElement(Icons[item.icon] || Icons.Box, { size: 20, className: "mb-1" })}
-                  <span className="text-[9px] font-black uppercase tracking-tight whitespace-nowrap">{item.label}</span>
+                  {React.createElement(Icons[item.icon] || Icons.Box, { size: 20 })}
+                  <span className="text-[9px] font-black uppercase mt-1 whitespace-nowrap">{item.label}</span>
                 </button>
 
                 {item.children && (
-                  <div className="absolute left-0 top-full w-48 bg-white shadow-2xl rounded-b-xl overflow-hidden hidden group-hover:block z-50 border-t-2 border-teal-600">
+                  <div className="absolute left-0 top-full w-56 bg-white shadow-2xl rounded-b-xl overflow-hidden hidden group-hover:block z-50 border-t-2 border-teal-600">
                     {item.children.map(child => (
                       <button
                         key={child.id}
                         onClick={() => handleNavClick(item.id, child.id)}
-                        className={`w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-3 border-b border-gray-50 last:border-0 ${activeSubTab === child.id ? 'bg-teal-50 text-teal-600 pl-6 shadow-inner' : 'text-gray-600 hover:bg-gray-50 hover:pl-5'}`}
+                        className={`w-full text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest border-b border-gray-50 last:border-0 transition-all ${activeSubTab === child.id ? 'bg-teal-50 text-teal-600 pl-8' : 'text-gray-600 hover:bg-gray-50 hover:pl-7'}`}
                       >
                         {child.label}
                       </button>
@@ -301,15 +194,64 @@ const App: React.FC = () => {
           </div>
         </nav>
 
-        <main className="flex-1 overflow-y-auto bg-[#ecf0f5] scroll-smooth">
-          <Suspense fallback={<LoadingSpinner />}>
-            {renderContent()}
-          </Suspense>
+        <main className="flex-1 overflow-x-auto bg-[#ecf0f5]">
+          <div className="min-w-full lg:min-w-[1024px] p-4 lg:p-10">
+            <Suspense fallback={<LoadingSpinner />}>
+              {isNavigating ? <LoadingSpinner /> : (
+                <>
+                  {activeTab === 'dashboard' && (
+                    <div className="space-y-8 animate-in fade-in duration-500">
+                      <div className="bg-white p-12 border rounded-sm shadow-sm text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-2 h-full bg-blue-900"></div>
+                        <h2 className="text-4xl font-light text-gray-500">Welcome, <span className="font-black text-gray-900 uppercase">{user.fullName}</span></h2>
+                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] mt-2">Active Session: {user.branch} Terminal</p>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-white border rounded-sm overflow-hidden shadow-sm">
+                          <div className="bg-gray-800 text-white px-6 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
+                             <Icons.History size={14} /> System Activity Log
+                          </div>
+                          <div className="p-10 text-center space-y-4">
+                             <Icons.CheckCircle2 className="mx-auto text-green-500" size={32} />
+                             <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Protocol Check: All modules operating within normal parameters.</p>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white border rounded-sm overflow-hidden p-10 text-center space-y-6 shadow-sm border-t-4 border-blue-900">
+                           <h3 className="text-2xl font-light text-gray-700">ERP Status: <span className="text-green-600 font-black">AUTHORIZED</span></h3>
+                           <p className="text-[11px] text-gray-400 font-medium leading-relaxed uppercase tracking-widest px-10">
+                            Enterprise resource planning system for <br/>
+                            <span className="text-blue-900 font-black">M/S Al-Amin Enterprise</span>.
+                           </p>
+                           <div className="pt-4 border-t border-gray-50">
+                              <p className="text-[10px] text-gray-300 font-black uppercase">Support Helpline: 01678819779</p>
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {activeTab === 'service' && <ServiceManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} products={products} />}
+                  {activeTab === 'sales' && <SalesManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} products={products} />}
+                  {activeTab === 'inventory' && <InventoryManagement products={products} onUpdateProducts={setProducts} purchaseOrders={purchaseOrders} onUpdatePurchaseOrders={setPurchaseOrders} activeSubTab={activeSubTab} templates={templates} />}
+                  {activeTab === 'store' && <StoreManagement activeSubTab={activeSubTab} jobCards={jobCards} onUpdateJobCards={setJobCards} />}
+                  {activeTab === 'master-setup' && (
+                    <>
+                      {activeSubTab === 'master-setup-customer' && <CustomerManagement customers={customers} onUpdateCustomers={setCustomers} />}
+                      {activeSubTab === 'master-setup-product' && <ProductManagement products={products} onUpdateProducts={setProducts} />}
+                      {activeSubTab === 'master-setup-user-mgmt' && <UserManagement />}
+                    </>
+                  )}
+                </>
+              )}
+            </Suspense>
+          </div>
         </main>
 
-        <footer className="bg-white border-t border-gray-200 py-3 px-4 text-[9px] text-gray-400 font-bold uppercase tracking-widest flex justify-between shrink-0 no-print">
-          <span>M/S Al-Amin Enterprise</span>
-          <span className="hidden md:block">All rights reserved © 2017-2024 Gangchill Group</span>
+        <footer className="bg-white border-t py-4 px-6 text-[9px] text-gray-400 font-black uppercase tracking-[0.3em] flex justify-between shrink-0 no-print">
+          <span>Terminal Identity: {user.fullName} / {user.id}</span>
+          <span className="hidden md:block">M/S Al-Amin Enterprise • Al-Amin bd © 2024</span>
+          <span>Gangchill Group ERP v2.5</span>
         </footer>
       </div>
     </ErrorBoundary>

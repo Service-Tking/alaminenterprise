@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 // Global Error Boundary to capture and display runtime crashes
-interface GEBProps { children: ReactNode; }
+interface GEBProps { children?: ReactNode; }
 interface GEBState { hasError: boolean; error?: Error; }
 
-// Explicitly use Component and constructor to resolve 'props' type resolution issues in some TypeScript environments
+// Fix: Extending Component directly to resolve 'this.props' and 'this.state' errors in TypeScript.
 class GlobalErrorBoundary extends Component<GEBProps, GEBState> {
+  public state: GEBState = { hasError: false };
+
   constructor(props: GEBProps) {
     super(props);
-    this.state = { hasError: false };
   }
 
   public static getDerivedStateFromError(error: Error): GEBState {

@@ -28,9 +28,20 @@
     
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     
-    /* Touch target consistency */
-    input, select, button { min-height: 44px; }
-    .compact-input { min-height: 32px !important; }
+    /* Formal Table Styles */
+    .formal-table th { 
+      background: #343a40; 
+      color: white; 
+      text-transform: uppercase; 
+      font-size: 10px; 
+      padding: 8px 12px; 
+      border: 1px solid #454d55;
+    }
+    .formal-table td { 
+      padding: 8px 12px; 
+      border: 1px solid #dee2e6; 
+      font-size: 11px;
+    }
   </style>
 <script type="importmap">
 {
@@ -48,6 +59,6 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="module" src="./main.tsx"></script>
+  <script type="module" src="main.tsx"></script>
 </body>
 </html>
