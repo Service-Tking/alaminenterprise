@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Al-Amin Enterprise ERP</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,19 +14,11 @@
       background-color: #ecf0f5;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     
-    .brand-ragtime {
-      font-family: 'Inter', sans-serif;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-    }
-    
-    .brand-articpro {
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      font-style: italic;
-    }
+    .brand-ragtime { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.02em; }
+    .brand-articpro { font-family: 'Inter', sans-serif; font-weight: 500; font-style: italic; }
 
     @media print {
       .no-print { display: none !important; }
@@ -34,8 +26,11 @@
       @page { size: A4; margin: 0; }
     }
     
-    /* Ensure scrollbar doesn't ruin A4 height on screen */
     .scrollbar-hide::-webkit-scrollbar { display: none; }
+    
+    /* Touch target consistency */
+    input, select, button { min-height: 44px; }
+    .compact-input { min-height: 32px !important; }
   </style>
 <script type="importmap">
 {
@@ -53,7 +48,6 @@
 </head>
 <body>
   <div id="root"></div>
-  <!-- Exact entry point for Vite/Vercel build fix -->
   <script type="module" src="./main.tsx"></script>
 </body>
 </html>

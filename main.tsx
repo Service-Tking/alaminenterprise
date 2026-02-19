@@ -1,4 +1,3 @@
-
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -7,9 +6,12 @@ import App from './App';
 interface GEBProps { children: ReactNode; }
 interface GEBState { hasError: boolean; error?: Error; }
 
-// Fix: Use React.Component explicitly to resolve 'props' type resolution issues in strict TypeScript environments
-class GlobalErrorBoundary extends React.Component<GEBProps, GEBState> {
-  public state: GEBState = { hasError: false };
+// Explicitly use Component and constructor to resolve 'props' type resolution issues in some TypeScript environments
+class GlobalErrorBoundary extends Component<GEBProps, GEBState> {
+  constructor(props: GEBProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
   public static getDerivedStateFromError(error: Error): GEBState {
     return { hasError: true, error };
