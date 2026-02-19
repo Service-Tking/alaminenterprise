@@ -7,8 +7,8 @@ import App from './App';
 interface GEBProps { children: ReactNode; }
 interface GEBState { hasError: boolean; error?: Error; }
 
-// Fixed: Explicitly using Component from react to resolve 'props' type resolution issues in the build environment
-class GlobalErrorBoundary extends Component<GEBProps, GEBState> {
+// Fix: Use React.Component explicitly to resolve 'props' type resolution issues in strict TypeScript environments
+class GlobalErrorBoundary extends React.Component<GEBProps, GEBState> {
   public state: GEBState = { hasError: false };
 
   public static getDerivedStateFromError(error: Error): GEBState {

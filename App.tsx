@@ -24,8 +24,8 @@ import { GangchillLogo } from './components/Logo';
 interface EBProps { children: ReactNode; }
 interface EBState { hasError: boolean; }
 
-// Fixed: Explicitly using Component from react to resolve 'props' type resolution issues in the build environment
-class ErrorBoundary extends Component<EBProps, EBState> {
+// Fix: Use React.Component explicitly to resolve 'props' type resolution issues in strict TypeScript environments
+class ErrorBoundary extends React.Component<EBProps, EBState> {
   public state: EBState = { hasError: false };
   public static getDerivedStateFromError(_: Error): EBState { return { hasError: true }; }
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) { console.error("Uncaught error:", error, errorInfo); }

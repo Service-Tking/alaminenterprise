@@ -36,13 +36,19 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    // Wrap in setTimeout(0) to unblock the main thread and allow the browser to paint the loading state
+    // FIX: Wrapping heavy logic in setTimeout to unblock the main thread (Fixes 305ms INP Issue)
     setTimeout(() => {
-      // Logic for refresh (in this ERP, we simulate data validation/sync)
-      const dataSync = [...(products || [])];
-      console.log("Refining inventory ledger state...", dataSync.length);
+      // Simulate data processing/re-validation
+      const currentProducts = products || [];
+      console.log('Refreshing inventory state for', currentProducts.length, 'items...');
+      
+      // In a real scenario, this would be a fetch. Here we just ensure state isn't null.
+      if (!products) {
+        onUpdateProducts([]);
+      }
+      
       setIsRefreshing(false);
-    }, 300);
+    }, 10); // Small delay allows UI thread to paint the spinner
   };
 
   const handleApproveGRN = () => {
@@ -89,18 +95,14 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
           <button 
             disabled={isRefreshing}
             onClick={handleRefresh} 
-            className={`flex items-center gap-2 bg-blue-900 text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-900/20 active:scale-95 transition-all ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`flex items-center gap-2 bg-[#17a2b8] text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-teal-600/20 active:scale-95 transition-all ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isRefreshing ? (
-              <Icons.RefreshCw className="animate-spin" size={16}/>
-            ) : (
-              <Icons.RefreshCw size={16}/>
-            )}
-            {isRefreshing ? 'Refreshing...' : 'Refresh Ledger'}
+            {isRefreshing ? <Icons.RefreshCw size={16} className="animate-spin" /> : <Icons.RefreshCw size={16}/>} 
+            {isRefreshing ? 'Processing...' : 'Refresh Ledger'}
           </button>
         </div>
       </div>
-      <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm min-h-[400px]">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
@@ -111,9 +113,10 @@ const InventoryManagement: React.FC<InventoryManagementProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
+            {/* GUARD: Added (products || []) to prevent blank page on null state */}
             {(!products || products.length === 0) ? (
               <tr><td colSpan={4} className="p-20 text-center text-gray-300 font-black uppercase tracking-widest text-xs">Inventory empty. Approve POs to fill.</td></tr>
-            ) : products?.map(p => {
+            ) : (products || []).map(p => {
               if (!p) return null;
               return (
                 <tr key={p.id || Math.random()} className="hover:bg-teal-50/30 transition-colors">
